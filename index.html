@@ -7,391 +7,138 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f8f9fb;
-    --surface: #ffffff;
-    --surface2: #f2f4f8;
-    --border: #e2e6ef;
-    --accent: #2563eb;
-    --accent-light: #eff6ff;
-    --warn: #ef4444;
-    --warn-light: #fef2f2;
-    --green: #16a34a;
-    --green-light: #f0fdf4;
-    --purple: #7c3aed;
-    --orange: #ea580c;
-    --text: #1e293b;
-    --muted: #64748b;
-    --muted2: #94a3b8;
-  }
+:root{
+  --bg:#f8f9fb;--surface:#fff;--surface2:#f2f4f8;--border:#e2e6ef;
+  --accent:#2563eb;--accent-l:#eff6ff;--warn:#ef4444;--warn-l:#fef2f2;
+  --green:#16a34a;--purple:#7c3aed;--orange:#ea580c;--teal:#0891b2;
+  --text:#1e293b;--muted:#64748b;--muted2:#94a3b8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;min-height:100vh;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* Login */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff,#f8f9fb);}
+.login-card{background:#fff;border-radius:16px;padding:48px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:400px;width:90%;}
+.login-logo{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.login-sub{color:var(--muted);font-size:13px;margin-bottom:32px;}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 24px;font-size:14px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;width:100%;transition:all .2s;color:var(--text);}
+.btn-google:hover{background:var(--surface2);border-color:var(--accent);}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 14px;
-    min-height: 100vh;
-  }
+/* App */
+#app{display:none;}
+header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.logo{font-family:'Space Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:2px;}
+.header-right{display:flex;align-items:center;gap:10px;}
+.user-info{font-size:12px;color:var(--muted);}
+.btn-refresh{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .2s;}
+.btn-refresh:hover{background:#1d4ed8;}
+.btn-logout{background:none;border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;color:var(--muted);transition:all .2s;}
+.btn-logout:hover{border-color:var(--warn);color:var(--warn);}
 
-  /* ── Login ── */
-  #loginScreen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #eff6ff 0%, #f8f9fb 100%);
-  }
+#loading{text-align:center;padding:60px;color:var(--muted);}
+.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  .login-card {
-    background: white;
-    border-radius: 16px;
-    padding: 48px;
-    text-align: center;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-    max-width: 400px;
-    width: 90%;
-  }
+.main{padding:20px;max-width:1400px;margin:0 auto;}
 
-  .login-logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 20px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:10px;width:fit-content;flex-wrap:wrap;}
+.tab{background:none;border:none;padding:7px 16px;border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.tab.active{background:#fff;color:var(--accent);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.section{display:none;}
+.section.active{display:block;}
 
-  .login-sub {
-    color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 32px;
-  }
+/* KPI */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
+.kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
+.kpi-val{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;line-height:1;}
+.kpi-val.blue{color:var(--accent)}.kpi-val.red{color:var(--warn)}.kpi-val.green{color:var(--green)}.kpi-val.purple{color:var(--purple)}.kpi-val.orange{color:var(--orange)}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
 
-  .btn-google {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-family: 'Noto Sans TC', sans-serif;
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.2s;
-    color: var(--text);
-  }
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
+.grid-7-5{display:grid;grid-template-columns:7fr 5fr;gap:14px;margin-bottom:14px;}
+.grid-6-4{display:grid;grid-template-columns:6fr 4fr;gap:14px;margin-bottom:14px;}
 
-  .btn-google:hover {
-    background: var(--surface2);
-    border-color: var(--accent);
-  }
+.card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:14px;}
+.card-title{font-size:13px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.badge{font-size:10px;padding:2px 8px;background:var(--accent-l);color:var(--accent);border-radius:4px;font-family:'Space Mono',monospace;}
 
-  /* ── App ── */
-  #app { display: none; }
+/* Search */
+.search-wrap{position:relative;margin-bottom:12px;}
+.search-input{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 12px 8px 34px;font-family:'Noto Sans TC',sans-serif;font-size:13px;background:#fff;color:var(--text);outline:none;transition:border .2s;}
+.search-input:focus{border-color:var(--accent);}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
 
-  header {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-  }
+/* Select */
+.sel{border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Noto Sans TC',sans-serif;font-size:12px;background:#fff;cursor:pointer;color:var(--text);}
+.filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 
-  .logo {
-    font-family: 'Space Mono', monospace;
-    font-size: 14px;
-    color: var(--accent);
-    letter-spacing: 2px;
-  }
+/* Tables */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;padding:0 0 9px;border-bottom:1px solid var(--border);font-weight:400;}
+.tbl td{padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12px;vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl .amt{font-family:'Space Mono',monospace;text-align:right;}
+.tbl .amt.out{color:var(--warn);}
+.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:4px;}
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+/* Category list */
+.cat-list{display:flex;flex-direction:column;gap:10px;}
+.cat-row{display:flex;align-items:center;gap:8px;}
+.cat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.cat-name{flex:1;font-size:12px;}
+.cat-amt{font-family:'Space Mono',monospace;font-size:12px;}
+.cat-pct{font-size:10px;color:var(--muted);width:34px;text-align:right;}
+.cat-bar-bg{height:3px;background:var(--surface2);border-radius:2px;margin-top:3px;}
+.cat-bar{height:100%;border-radius:2px;}
 
-  .user-info {
-    font-size: 12px;
-    color: var(--muted);
-  }
+/* Month table */
+.bar-cell{width:100px;}
+.bar-bg{height:5px;background:var(--surface2);border-radius:3px;}
+.bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s;}
 
-  .btn-refresh {
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 7px 14px;
-    font-size: 12px;
-    font-family: 'Noto Sans TC', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
+/* Year compare */
+.compare-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.compare-col{}
+.compare-header{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
+.compare-year{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);}
+.compare-total{font-family:'Space Mono',monospace;font-size:12px;color:var(--warn);}
 
-  .btn-refresh:hover { background: #1d4ed8; }
+/* Merchant tracker */
+.merchant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
+.merchant-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.merchant-name{font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.merchant-cat{font-size:10px;padding:1px 6px;border-radius:3px;margin-bottom:8px;display:inline-block;}
+.merchant-total{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--warn);}
+.merchant-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 
-  .btn-logout {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 14px;
-    font-size: 12px;
-    font-family: 'Noto Sans TC', sans-serif;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
+/* Insight */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.insight-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:15px;}
+.insight-icon{font-size:20px;margin-bottom:7px;}
+.insight-title{font-size:12px;font-weight:500;margin-bottom:4px;}
+.insight-desc{font-size:11px;color:var(--muted);line-height:1.6;}
 
-  .btn-logout:hover { border-color: var(--warn); color: var(--warn); }
+canvas{max-height:220px;}
 
-  /* ── Loading ── */
-  #loading {
-    text-align: center;
-    padding: 60px;
-    color: var(--muted);
-  }
-
-  .spinner {
-    width: 32px;
-    height: 32px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 0 auto 16px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── Main ── */
-  .main { padding: 24px; max-width: 1400px; margin: 0 auto; }
-
-  /* ── Tabs ── */
-  .tabs {
-    display: flex;
-    gap: 4px;
-    margin-bottom: 20px;
-    background: var(--surface2);
-    padding: 4px;
-    border-radius: 10px;
-    width: fit-content;
-  }
-
-  .tab {
-    background: none;
-    border: none;
-    padding: 8px 18px;
-    border-radius: 7px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.2s;
-  }
-
-  .tab.active {
-    background: white;
-    color: var(--accent);
-    font-weight: 500;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  }
-
-  .section { display: none; }
-  .section.active { display: block; }
-
-  /* ── KPI Cards ── */
-  .kpi-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-
-  .kpi {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 18px 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-
-  .kpi-label {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
-  }
-
-  .kpi-val {
-    font-family: 'Space Mono', monospace;
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 1;
-    color: var(--text);
-  }
-
-  .kpi-val.blue { color: var(--accent); }
-  .kpi-val.red { color: var(--warn); }
-  .kpi-val.green { color: var(--green); }
-  .kpi-val.purple { color: var(--purple); }
-
-  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
-
-  /* ── Grid ── */
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .grid-7-5 { display: grid; grid-template-columns: 7fr 5fr; gap: 16px; margin-bottom: 16px; }
-
-  .card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    margin-bottom: 16px;
-  }
-
-  .card-title {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 4px;
-    font-family: 'Space Mono', monospace;
-  }
-
-  /* ── Year Selector ── */
-  .year-select-wrap {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .year-select {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 12px;
-    font-family: 'Noto Sans TC', sans-serif;
-    font-size: 13px;
-    background: white;
-    cursor: pointer;
-    color: var(--text);
-  }
-
-  /* ── Monthly Table ── */
-  .month-table { width: 100%; border-collapse: collapse; }
-  .month-table th {
-    text-align: left;
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 0 0 10px;
-    border-bottom: 1px solid var(--border);
-    font-weight: 400;
-  }
-  .month-table td {
-    padding: 9px 0;
-    border-bottom: 1px solid #f1f5f9;
-    font-size: 13px;
-  }
-  .month-table tr:last-child td { border-bottom: none; }
-  .month-table .amt {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    text-align: right;
-    color: var(--warn);
-  }
-  .month-table .bar-cell { width: 120px; }
-  .bar-bg { height: 6px; background: var(--surface2); border-radius: 3px; }
-  .bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.5s; }
-
-  /* ── Category List ── */
-  .cat-list { display: flex; flex-direction: column; gap: 10px; }
-  .cat-item { display: flex; align-items: center; gap: 8px; }
-  .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .cat-name { flex: 1; font-size: 12px; }
-  .cat-amt { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text); }
-  .cat-pct { font-size: 11px; color: var(--muted); width: 36px; text-align: right; }
-  .cat-bar-bg { height: 3px; background: var(--surface2); border-radius: 2px; margin-top: 3px; }
-  .cat-bar { height: 100%; border-radius: 2px; }
-
-  /* ── Transaction Table ── */
-  .tx-table { width: 100%; border-collapse: collapse; }
-  .tx-table th { text-align: left; font-size: 11px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; padding: 0 0 10px; border-bottom: 1px solid var(--border); font-weight: 400; }
-  .tx-table td { padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 12px; vertical-align: top; }
-  .tx-table tr:last-child td { border-bottom: none; }
-  .tx-amt { font-family: 'Space Mono', monospace; text-align: right; color: var(--warn); }
-  .tx-tag { display: inline-block; font-size: 10px; padding: 1px 6px; border-radius: 3px; margin-left: 4px; }
-
-  /* ── Insight ── */
-  .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .insight-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
-  .insight-icon { font-size: 20px; margin-bottom: 8px; }
-  .insight-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; }
-  .insight-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
-
-  /* ── Year Compare ── */
-  .compare-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .compare-col { }
-  .compare-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-  .compare-year {
-    font-family: 'Space Mono', monospace;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .compare-total {
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: var(--warn);
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
-    .grid-2, .grid-7-5, .compare-wrap { grid-template-columns: 1fr; }
-    .grid-3 { grid-template-columns: 1fr 1fr; }
-    .insight-grid { grid-template-columns: 1fr 1fr; }
-    .main { padding: 16px; }
-    header { padding: 12px 16px; }
-  }
+@media(max-width:768px){
+  .grid-2,.grid-7-5,.grid-6-4,.compare-wrap{grid-template-columns:1fr;}
+  .grid-3{grid-template-columns:1fr 1fr;}
+  .main{padding:12px;}
+  header{padding:12px 16px;}
+}
 </style>
 </head>
 <body>
 
-<!-- Login Screen -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">FINANCE PULSE</div>
     <div class="login-sub">個人財務儀表板</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6">
-      登入後自動讀取您 Google Drive<br>「01 發票資料」資料夾的 CSV 資料
-    </p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6">登入後自動讀取 Google Drive 資料<br>發票載具 + 台新信用卡</p>
     <button class="btn-google" onclick="signIn()">
       <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"/></svg>
       使用 Google 帳號登入
@@ -399,7 +146,6 @@
   </div>
 </div>
 
-<!-- App -->
 <div id="app">
   <header>
     <div class="logo">FINANCE PULSE</div>
@@ -409,77 +155,98 @@
       <button class="btn-logout" onclick="signOut()">登出</button>
     </div>
   </header>
-
   <div class="main">
-    <div id="loading" style="display:none">
-      <div class="spinner"></div>
-      <p>正在讀取 Google Drive 資料...</p>
-    </div>
-
+    <div id="loading" style="display:none"><div class="spinner"></div><p>正在讀取資料...</p></div>
     <div id="dashboard" style="display:none">
-      <!-- Tabs -->
       <div class="tabs">
-        <button class="tab active" onclick="showTab('overview', this)">📊 總覽</button>
-        <button class="tab" onclick="showTab('compare', this)">📅 跨年比較</button>
-        <button class="tab" onclick="showTab('detail', this)">🧾 消費明細</button>
-        <button class="tab" onclick="showTab('insights', this)">💡 洞察</button>
+        <button class="tab active" onclick="showTab('overview',this)">📊 發票總覽</button>
+        <button class="tab" onclick="showTab('compare',this)">📅 跨年比較</button>
+        <button class="tab" onclick="showTab('taishin',this)">💳 台新信用卡</button>
+        <button class="tab" onclick="showTab('merchant',this)">🏪 商家追蹤</button>
+        <button class="tab" onclick="showTab('detail',this)">🧾 消費明細</button>
+        <button class="tab" onclick="showTab('insights',this)">💡 洞察</button>
       </div>
 
-      <!-- 總覽 -->
+      <!-- 發票總覽 -->
       <div class="section active" id="tab-overview">
-        <div class="year-select-wrap">
-          <label style="font-size:13px;color:var(--muted)">選擇年份：</label>
-          <select class="year-select" id="yearSelect" onchange="renderOverview()"></select>
+        <div class="filter-row">
+          <label style="font-size:12px;color:var(--muted)">年份：</label>
+          <select class="sel" id="yearSelect" onchange="renderOverview()"></select>
         </div>
         <div class="kpi-row" id="kpiRow"></div>
         <div class="grid-7-5">
-          <div class="card">
-            <div class="card-title"><span>每月消費金額</span></div>
-            <canvas id="monthlyChart"></canvas>
-          </div>
-          <div class="card">
-            <div class="card-title"><span>支出分類</span></div>
-            <canvas id="donutChart"></canvas>
-          </div>
+          <div class="card"><div class="card-title"><span>每月消費</span></div><canvas id="monthlyChart"></canvas></div>
+          <div class="card"><div class="card-title"><span>支出分類</span></div><canvas id="donutChart"></canvas></div>
         </div>
         <div class="grid-2">
-          <div class="card">
-            <div class="card-title"><span>各月明細</span></div>
-            <table class="month-table" id="monthTable"></table>
-          </div>
-          <div class="card">
-            <div class="card-title"><span>分類金額</span></div>
-            <div class="cat-list" id="catList"></div>
-          </div>
+          <div class="card"><div class="card-title"><span>各月金額</span></div><table class="tbl" id="monthTable"></table></div>
+          <div class="card"><div class="card-title"><span>分類明細</span></div><div class="cat-list" id="catList"></div></div>
         </div>
       </div>
 
       <!-- 跨年比較 -->
       <div class="section" id="tab-compare">
-        <div class="card">
-          <div class="card-title"><span>跨年月份消費比較</span></div>
-          <canvas id="compareChart" style="max-height:300px"></canvas>
-        </div>
+        <div class="card"><div class="card-title"><span>跨年月份消費比較</span></div><canvas id="compareChart" style="max-height:280px"></canvas></div>
         <div class="compare-wrap" id="compareWrap"></div>
+      </div>
+
+      <!-- 台新信用卡 -->
+      <div class="section" id="tab-taishin">
+        <div class="filter-row">
+          <label style="font-size:12px;color:var(--muted)">年份：</label>
+          <select class="sel" id="taishinYear" onchange="renderTaishin()"></select>
+          <select class="sel" id="taishinCat" onchange="renderTaishin()"><option value="">全部分類</option></select>
+        </div>
+        <div class="kpi-row" id="taishinKpi"></div>
+        <div class="grid-7-5">
+          <div class="card"><div class="card-title"><span>台新每月消費</span></div><canvas id="taishinChart"></canvas></div>
+          <div class="card"><div class="card-title"><span>支出分類</span></div><canvas id="taishinDonut"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>台新消費明細</span><span class="badge" id="taishinCount"></span></div>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="taishinSearch" placeholder="搜尋消費明細..." oninput="renderTaishin()"></div>
+          <table class="tbl">
+            <thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th style="text-align:right">金額</th></tr></thead>
+            <tbody id="taishinBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 商家追蹤 -->
+      <div class="section" id="tab-merchant">
+        <div class="filter-row">
+          <label style="font-size:12px;color:var(--muted)">資料來源：</label>
+          <select class="sel" id="merchantSource" onchange="renderMerchant()">
+            <option value="all">全部</option>
+            <option value="invoice">發票載具</option>
+            <option value="taishin">台新信用卡</option>
+          </select>
+          <select class="sel" id="merchantYear" onchange="renderMerchant()"><option value="">全部年份</option></select>
+          <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:200px">
+            <span class="search-icon">🔍</span>
+            <input class="search-input" id="merchantSearch" placeholder="搜尋商家或服務..." oninput="renderMerchant()">
+          </div>
+        </div>
+        <div class="merchant-grid" id="merchantGrid"></div>
       </div>
 
       <!-- 消費明細 -->
       <div class="section" id="tab-detail">
         <div class="card">
-          <div class="card-title">
-            <span>全部消費明細</span>
-            <div style="display:flex;gap:8px;align-items:center">
-              <select class="year-select" id="detailYear" onchange="renderDetail()"></select>
-              <select class="year-select" id="detailCat" onchange="renderDetail()">
-                <option value="">全部分類</option>
-              </select>
-            </div>
+          <div class="card-title"><span>全部消費明細</span><span class="badge" id="detailCount"></span></div>
+          <div class="filter-row">
+            <select class="sel" id="detailSource" onchange="renderDetail()">
+              <option value="all">全部來源</option>
+              <option value="invoice">發票載具</option>
+              <option value="taishin">台新信用卡</option>
+            </select>
+            <select class="sel" id="detailYear" onchange="renderDetail()"></select>
+            <select class="sel" id="detailCat" onchange="renderDetail()"><option value="">全部分類</option></select>
           </div>
-          <table class="tx-table">
-            <thead><tr>
-              <th>日期</th><th>商家</th><th>品名</th><th>分類</th><th style="text-align:right">金額</th>
-            </tr></thead>
-            <tbody id="txBody"></tbody>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="detailSearch" placeholder="搜尋商家、品名、消費明細..." oninput="renderDetail()"></div>
+          <table class="tbl">
+            <thead><tr><th>日期</th><th>商家 / 消費明細</th><th>分類</th><th>來源</th><th style="text-align:right">金額</th></tr></thead>
+            <tbody id="detailBody"></tbody>
           </table>
         </div>
       </div>
@@ -493,21 +260,19 @@
 </div>
 
 <script>
-// ── Config ────────────────────────────────────────────
 const CLIENT_ID = '300122945168-fa0n4ne40fjja2vnbvs4tg2ptadhqfrp.apps.googleusercontent.com';
-const FOLDER_NAME = '01 發票資料';
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+const INVOICE_FOLDER = '01 發票資料';
+const TAISHIN_FOLDER = '02 台新信用卡';
 
-let tokenClient;
-let accessToken = null;
-let allData = [];
+let tokenClient, accessToken = null;
+let invoiceData = [], taishinData = [];
 let charts = {};
 
 // ── Auth ──────────────────────────────────────────────
 function initGSI() {
   tokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID,
-    scope: SCOPES,
+    client_id: CLIENT_ID, scope: SCOPES,
     callback: async (resp) => {
       if (resp.error) return;
       accessToken = resp.access_token;
@@ -517,15 +282,10 @@ function initGSI() {
     }
   });
 }
-
-function signIn() {
-  tokenClient.requestAccessToken();
-}
-
+function signIn() { tokenClient.requestAccessToken(); }
 function signOut() {
   google.accounts.oauth2.revoke(accessToken);
-  accessToken = null;
-  allData = [];
+  accessToken = null; invoiceData = []; taishinData = [];
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
 }
@@ -534,46 +294,9 @@ function signOut() {
 async function loadData() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('dashboard').style.display = 'none';
-
   try {
-    // Find folder
-    const folderRes = await fetch(
-      `https://www.googleapis.com/drive/v3/files?q=name='${FOLDER_NAME}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id,name)`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-    const folderData = await folderRes.json();
-    if (!folderData.files?.length) {
-      alert('找不到「01 發票資料」資料夾，請確認資料夾名稱正確');
-      return;
-    }
-    const folderId = folderData.files[0].id;
-
-    // List CSV files
-    const filesRes = await fetch(
-      `https://www.googleapis.com/drive/v3/files?q='${folderId}' in parents and mimeType='text/csv' and trashed=false&fields=files(id,name)`,
-      { headers: { Authorization: `Bearer ${accessToken}` } }
-    );
-    const filesData = await filesRes.json();
-
-    allData = [];
-    for (const file of filesData.files) {
-      const contentRes = await fetch(
-        `https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`,
-        { headers: { Authorization: `Bearer ${accessToken}` } }
-      );
-      const text = await contentRes.text();
-      allData.push(...parseCsv(text));
-    }
-
-    // Deduplicate
-    const seen = new Set();
-    allData = allData.filter(r => {
-      const key = r.invoice + '|' + r.item;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-
+    invoiceData = await loadFolderCsvs(INVOICE_FOLDER, parseInvoiceCsv);
+    taishinData = await loadFolderCsvs(TAISHIN_FOLDER, parseTaishinCsv);
     renderAll();
     document.getElementById('loading').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
@@ -584,8 +307,27 @@ async function loadData() {
   }
 }
 
-// ── CSV Parser ────────────────────────────────────────
-function parseCsv(content) {
+async function loadFolderCsvs(folderName, parser) {
+  const folderRes = await driveGet(`files?q=name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id)`);
+  if (!folderRes.files?.length) return [];
+  const folderId = folderRes.files[0].id;
+  const filesRes = await driveGet(`files?q='${folderId}' in parents and trashed=false&fields=files(id,name)`);
+  const rows = [];
+  for (const file of filesRes.files) {
+    const res = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, { headers: { Authorization: `Bearer ${accessToken}` } });
+    const text = await res.text();
+    rows.push(...parser(text));
+  }
+  return rows;
+}
+
+async function driveGet(path) {
+  const res = await fetch(`https://www.googleapis.com/drive/v3/${path}`, { headers: { Authorization: `Bearer ${accessToken}` } });
+  return res.json();
+}
+
+// ── Parsers ───────────────────────────────────────────
+function parseInvoiceCsv(content) {
   const lines = content.split('\n');
   const rows = [];
   for (let i = 1; i < lines.length; i++) {
@@ -593,37 +335,52 @@ function parseCsv(content) {
     if (!line || line.startsWith('捐贈') || line.startsWith('注意')) continue;
     const cols = splitCsv(line);
     if (cols.length < 14) continue;
-    const dateStr = cols[1].trim();
-    if (!dateStr || !/^\d{8}$/.test(dateStr)) continue;
+    const ds = cols[1].trim();
+    if (!ds || !/^\d{8}$/.test(ds)) continue;
     const amt = parseFloat(cols[12].trim());
     if (isNaN(amt) || amt <= 0) continue;
     const seller = cols[7].trim();
     const item = cols[13].trim();
-    rows.push({
-      date: dateStr.slice(0,4) + '/' + dateStr.slice(4,6) + '/' + dateStr.slice(6,8),
-      yearMonth: dateStr.slice(0,4) + '/' + dateStr.slice(4,6),
-      year: dateStr.slice(0,4),
-      month: dateStr.slice(4,6),
-      invoice: cols[2].trim(),
-      seller: cleanSeller(seller),
-      item: item,
-      amount: amt,
-      category: categorize(seller, item),
-    });
+    const date = ds.slice(0,4)+'/'+ds.slice(4,6)+'/'+ds.slice(6,8);
+    rows.push({ date, yearMonth: ds.slice(0,4)+'/'+ds.slice(4,6), year: ds.slice(0,4), invoice: cols[2].trim(), seller: cleanSeller(seller), item, amount: amt, category: categorize(seller, item), source: 'invoice', display: cleanSeller(seller) + (item ? '　' + item.slice(0,20) : '') });
+  }
+  return rows;
+}
+
+function parseTaishinCsv(content) {
+  const lines = content.split('\n');
+  const rows = [];
+  let inTx = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cols = splitCsv(line);
+    if (cols[0] && cols[0].includes('消費日期')) { inTx = true; continue; }
+    if (!inTx) continue;
+    if (cols[0] && (cols[0].includes('消費小計') || cols[0].includes('本期應繳'))) break;
+    const ds = cols[0] ? cols[0].trim() : '';
+    const desc = cols[2] ? cols[2].trim() : '';
+    const amtStr = cols[4] ? cols[4].trim().replace(/,/g,'') : '';
+    const amt = parseFloat(amtStr);
+    if (!ds || !desc || isNaN(amt) || amt <= 0) continue;
+    if (/繳款|循環|利息|手續費|回饋|違約|分期/.test(desc)) continue;
+    const m = ds.match(/(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (!m) continue;
+    const date = m[1]+'/'+m[2].padStart(2,'0')+'/'+m[3].padStart(2,'0');
+    const ym = date.slice(0,7);
+    rows.push({ date, yearMonth: ym, year: ym.slice(0,4), desc, amount: amt, category: categorize('', desc), source: 'taishin', display: desc });
   }
   return rows;
 }
 
 function splitCsv(line) {
-  const result = [];
-  let cur = '', inQ = false;
+  const r = []; let c = '', q = false;
   for (const ch of line) {
-    if (ch === '"') inQ = !inQ;
-    else if (ch === ',' && !inQ) { result.push(cur); cur = ''; }
-    else cur += ch;
+    if (ch==='"') q=!q;
+    else if (ch===',' && !q) { r.push(c); c=''; }
+    else c+=ch;
   }
-  result.push(cur);
-  return result;
+  r.push(c); return r;
 }
 
 function cleanSeller(s) {
@@ -632,56 +389,66 @@ function cleanSeller(s) {
     .replace('台灣屈臣氏個人用品商店','屈臣氏').slice(0,20);
 }
 
+// ── Categories & Colors ───────────────────────────────
 function categorize(seller, item) {
-  const c = (seller + ' ' + item).toLowerCase();
-  const inc = (keys) => keys.some(k => c.includes(k));
+  const c = (seller+' '+(item||'')).toLowerCase();
+  const inc = k => k.some(x => c.includes(x));
   if (inc(['停車','嘟嘟房'])) return '交通停車';
   if (inc(['加油','中油','汽油','無鉛'])) return '油費';
   if (inc(['電費','台灣電力'])) return '電費';
   if (inc(['水費','自來水'])) return '水費';
   if (inc(['瓦斯','欣芝','從量費'])) return '瓦斯';
   if (inc(['中華電信','行動月租','電信'])) return '電信費';
-  if (inc(['netflix','subscription','apple','google one','icloud','coupang','酷澎','wow'])) return '訂閱服務';
-  if (inc(['uber eat','富胖達','平台費','foodpanda'])) return '外送平台';
-  if (inc(['麥當勞','和德昌','漢堡','麥克','大麥克','香雞','肯德基'])) return '速食';
+  if (inc(['netflix','subscription','apple','google one','icloud','coupang','酷澎','wow','canva','asksia'])) return '訂閱服務';
+  if (inc(['uber eat','富胖達','平台費','foodpanda','優食'])) return '外送餐飲';
+  if (inc(['麥當勞','和德昌','漢堡','麥克','大麥克','香雞','肯德基','pizza','必勝客'])) return '速食';
   if (inc(['超商','7-eleven','全家','萊爾富','統一超商','統一生活'])) return '超商';
   if (inc(['路易莎','星巴克','coffee','咖啡','手搖','飲料','良欣'])) return '飲料';
-  if (inc(['屈臣氏','三商','日用','衛生','洗髮','沐浴','潤髮','眼藥','濕巾'])) return '日用品';
+  if (inc(['屈臣氏','三商','衛生','洗髮','沐浴','潤髮','眼藥','濕巾'])) return '日用品';
   if (inc(['dhc','保健','維他命'])) return '保健食品';
   if (inc(['書','文具','墊腳石'])) return '文具書籍';
-  if (inc(['醫院','診所','藥局','杏一','醫療'])) return '醫療';
-  if (inc(['牛肉麵','鍋貼','水餃','壽司','大戶屋','黛比澍','分盈','富利','百富通'])) return '餐廳';
+  if (inc(['醫院','診所','藥局','杏一','醫療','馬偕'])) return '醫療';
+  if (inc(['牛肉麵','鍋貼','水餃','壽司','大戶屋','黛比澍','分盈','富利','百富通','廣玉','口口香','櫻鴨'])) return '餐廳';
   return '其他';
 }
 
-// ── Colors ────────────────────────────────────────────
 const CAT_COLORS = {
   '超商':'#2563eb','訂閱服務':'#7c3aed','水電費':'#f59e0b','餐廳':'#ef4444',
   '其他':'#64748b','日用品':'#0891b2','速食':'#ea580c','電信費':'#84cc16',
   '飲料':'#ec4899','交通停車':'#10b981','油費':'#f97316','文具書籍':'#8b5cf6',
-  '外送平台':'#475569','保健食品':'#06b6d4','電費':'#f59e0b','水費':'#3b82f6',
+  '外送餐飲':'#f43f5e','保健食品':'#06b6d4','電費':'#f59e0b','水費':'#3b82f6',
   '瓦斯':'#78716c','醫療':'#14b8a6'
 };
-
-function catColor(cat) { return CAT_COLORS[cat] || '#94a3b8'; }
+function cc(cat) { return CAT_COLORS[cat] || '#94a3b8'; }
 
 // ── Render All ────────────────────────────────────────
 function renderAll() {
-  const years = [...new Set(allData.map(r => r.year))].sort().reverse();
+  const invYears = [...new Set(invoiceData.map(r=>r.year))].sort().reverse();
+  const taishinYears = [...new Set(taishinData.map(r=>r.year))].sort().reverse();
+  const allYears = [...new Set([...invYears,...taishinYears])].sort().reverse();
 
-  // Populate year selects
   ['yearSelect','detailYear'].forEach(id => {
-    const sel = document.getElementById(id);
-    sel.innerHTML = years.map(y => `<option value="${y}">${y}年</option>`).join('');
+    const s = document.getElementById(id);
+    s.innerHTML = invYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
   });
+  const taishinYearSel = document.getElementById('taishinYear');
+  taishinYearSel.innerHTML = taishinYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
 
-  // Detail category
-  const cats = [...new Set(allData.map(r => r.category))].sort();
-  const detailCat = document.getElementById('detailCat');
-  detailCat.innerHTML = '<option value="">全部分類</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  const merchantYearSel = document.getElementById('merchantYear');
+  merchantYearSel.innerHTML = '<option value="">全部年份</option>' + allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+
+  const cats = [...new Set([...invoiceData,...taishinData].map(r=>r.category))].sort();
+  ['detailCat','taishinCat'].forEach(id => {
+    const s = document.getElementById(id);
+    const cur = s.value;
+    s.innerHTML = '<option value="">全部分類</option>' + cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    if (cur) s.value = cur;
+  });
 
   renderOverview();
   renderCompare();
+  renderTaishin();
+  renderMerchant();
   renderDetail();
   renderInsights();
 }
@@ -689,219 +456,220 @@ function renderAll() {
 // ── Overview ──────────────────────────────────────────
 function renderOverview() {
   const year = document.getElementById('yearSelect').value;
-  const yearData = allData.filter(r => r.year === year);
-  const total = yearData.reduce((s,r) => s+r.amount, 0);
-
-  // Monthly totals
+  const yd = invoiceData.filter(r=>r.year===year);
+  const total = yd.reduce((s,r)=>s+r.amount,0);
   const byMonth = {};
-  for (let m = 1; m <= 12; m++) {
-    const key = year + '/' + String(m).padStart(2,'0');
-    byMonth[key] = 0;
-  }
-  yearData.forEach(r => { byMonth[r.yearMonth] = (byMonth[r.yearMonth]||0) + r.amount; });
-  const months = Object.keys(byMonth).filter(k => byMonth[k] > 0).sort();
-
-  // Category totals
+  for (let m=1;m<=12;m++) byMonth[year+'/'+String(m).padStart(2,'0')]=0;
+  yd.forEach(r=>{ byMonth[r.yearMonth]=(byMonth[r.yearMonth]||0)+r.amount; });
+  const months = Object.keys(byMonth).filter(k=>byMonth[k]>0).sort();
   const byCat = {};
-  yearData.forEach(r => { byCat[r.category] = (byCat[r.category]||0) + r.amount; });
-
-  // KPI
-  const avgMonth = months.length ? Math.round(total / months.length) : 0;
-  document.getElementById('kpiRow').innerHTML = `
-    <div class="kpi"><div class="kpi-label">年度總支出</div><div class="kpi-val red">$${Math.round(total).toLocaleString()}</div><div class="kpi-sub">${year}年</div></div>
-    <div class="kpi"><div class="kpi-label">月均支出</div><div class="kpi-val blue">$${avgMonth.toLocaleString()}</div><div class="kpi-sub">共${months.length}個月</div></div>
-    <div class="kpi"><div class="kpi-label">最高單月</div><div class="kpi-val purple">$${Math.max(...Object.values(byMonth)).toLocaleString()}</div></div>
-    <div class="kpi"><div class="kpi-label">餐飲合計</div><div class="kpi-val" style="color:var(--orange)">$${Math.round(['超商','餐廳','速食','飲料','外送平台'].reduce((s,c)=>s+(byCat[c]||0),0)).toLocaleString()}</div></div>
-  `;
-
-  // Monthly chart
-  if (charts.monthly) charts.monthly.destroy();
-  const ctx1 = document.getElementById('monthlyChart').getContext('2d');
-  charts.monthly = new Chart(ctx1, {
-    type: 'bar',
-    data: {
-      labels: months.map(m => m.slice(5) + '月'),
-      datasets: [{
-        data: months.map(m => byMonth[m]),
-        backgroundColor: months.map(m => byMonth[m] === Math.max(...months.map(k=>byMonth[k])) ? '#ef444488' : '#2563eb88'),
-        borderColor: months.map(m => byMonth[m] === Math.max(...months.map(k=>byMonth[k])) ? '#ef4444' : '#2563eb'),
-        borderWidth: 1, borderRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#64748b', font: { size: 11 } }, grid: { display: false } },
-        y: { ticks: { color: '#64748b', font: { size: 11 }, callback: v => '$' + v.toLocaleString() }, grid: { color: '#f1f5f9' } }
-      }
-    }
-  });
-
-  // Donut
-  if (charts.donut) charts.donut.destroy();
-  const sortedCats = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
-  const ctx2 = document.getElementById('donutChart').getContext('2d');
-  charts.donut = new Chart(ctx2, {
-    type: 'doughnut',
-    data: {
-      labels: sortedCats.map(c=>c[0]),
-      datasets: [{
-        data: sortedCats.map(c=>Math.round(c[1])),
-        backgroundColor: sortedCats.map(c=>catColor(c[0])+'cc'),
-        borderColor: sortedCats.map(c=>catColor(c[0])),
-        borderWidth: 1, hoverOffset: 6
-      }]
-    },
-    options: {
-      responsive: true, cutout: '65%',
-      plugins: {
-        legend: { labels: { color: '#64748b', font: { size: 11 }, boxWidth: 10 } },
-        tooltip: { callbacks: { label: ctx => ` $${ctx.raw.toLocaleString()}` } }
-      }
-    }
-  });
-
-  // Month table
+  yd.forEach(r=>{ byCat[r.category]=(byCat[r.category]||0)+r.amount; });
+  const avgMonth = months.length ? Math.round(total/months.length) : 0;
   const maxAmt = Math.max(...months.map(m=>byMonth[m]));
-  document.getElementById('monthTable').innerHTML = `
-    <thead><tr><th>月份</th><th class="bar-cell"></th><th style="text-align:right">金額</th></tr></thead>
-    <tbody>
-      ${months.map(m => `
-      <tr>
-        <td>${m.slice(5)}月</td>
-        <td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:${(byMonth[m]/maxAmt*100).toFixed(0)}%"></div></div></td>
-        <td class="amt">$${Math.round(byMonth[m]).toLocaleString()}</td>
-      </tr>`).join('')}
-    </tbody>`;
 
-  // Cat list
-  document.getElementById('catList').innerHTML = sortedCats.slice(0,10).map(([cat,amt]) => {
+  document.getElementById('kpiRow').innerHTML = `
+    <div class="kpi"><div class="kpi-label">年度總支出</div><div class="kpi-val red">$${Math.round(total).toLocaleString()}</div><div class="kpi-sub">${year}年 發票載具</div></div>
+    <div class="kpi"><div class="kpi-label">月均支出</div><div class="kpi-val blue">$${avgMonth.toLocaleString()}</div><div class="kpi-sub">共${months.length}個月</div></div>
+    <div class="kpi"><div class="kpi-label">最高單月</div><div class="kpi-val purple">$${maxAmt.toLocaleString()}</div></div>
+    <div class="kpi"><div class="kpi-label">餐飲合計</div><div class="kpi-val orange">$${Math.round(['超商','餐廳','速食','飲料','外送餐飲'].reduce((s,c)=>s+(byCat[c]||0),0)).toLocaleString()}</div></div>`;
+
+  destroyChart('monthly');
+  charts.monthly = new Chart(document.getElementById('monthlyChart').getContext('2d'),{
+    type:'bar',
+    data:{ labels:months.map(m=>m.slice(5)+'月'), datasets:[{ data:months.map(m=>byMonth[m]), backgroundColor:months.map(m=>byMonth[m]===maxAmt?'#ef444488':'#2563eb88'), borderColor:months.map(m=>byMonth[m]===maxAmt?'#ef4444':'#2563eb'), borderWidth:1, borderRadius:5 }] },
+    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false}}, y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}} } }
+  });
+
+  const sortedCats = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  destroyChart('donut');
+  charts.donut = new Chart(document.getElementById('donutChart').getContext('2d'),{
+    type:'doughnut',
+    data:{ labels:sortedCats.map(c=>c[0]), datasets:[{ data:sortedCats.map(c=>Math.round(c[1])), backgroundColor:sortedCats.map(c=>cc(c[0])+'cc'), borderColor:sortedCats.map(c=>cc(c[0])), borderWidth:1, hoverOffset:6 }] },
+    options:{ responsive:true, cutout:'65%', plugins:{ legend:{labels:{color:'#64748b',font:{size:10},boxWidth:9}}, tooltip:{callbacks:{label:ctx=>` $${ctx.raw.toLocaleString()}`}} } }
+  });
+
+  document.getElementById('monthTable').innerHTML = `<thead><tr><th>月份</th><th class="bar-cell"></th><th style="text-align:right">金額</th></tr></thead><tbody>
+    ${months.map(m=>`<tr><td>${m.slice(5)}月</td><td class="bar-cell"><div class="bar-bg"><div class="bar-fill" style="width:${(byMonth[m]/maxAmt*100).toFixed(0)}%"></div></div></td><td class="amt out">$${Math.round(byMonth[m]).toLocaleString()}</td></tr>`).join('')}
+  </tbody>`;
+
+  document.getElementById('catList').innerHTML = sortedCats.slice(0,10).map(([cat,amt])=>{
     const pct = ((amt/total)*100).toFixed(0);
-    return `
-    <div>
-      <div class="cat-item">
-        <div class="cat-dot" style="background:${catColor(cat)}"></div>
-        <span class="cat-name">${cat}</span>
-        <span class="cat-amt">$${Math.round(amt).toLocaleString()}</span>
-        <span class="cat-pct">${pct}%</span>
-      </div>
-      <div class="cat-bar-bg"><div class="cat-bar" style="width:${pct}%;background:${catColor(cat)}"></div></div>
-    </div>`;
+    return `<div><div class="cat-row"><div class="cat-dot" style="background:${cc(cat)}"></div><span class="cat-name">${cat}</span><span class="cat-amt">$${Math.round(amt).toLocaleString()}</span><span class="cat-pct">${pct}%</span></div><div class="cat-bar-bg"><div class="cat-bar" style="width:${pct}%;background:${cc(cat)}"></div></div></div>`;
   }).join('');
 }
 
 // ── Compare ───────────────────────────────────────────
 function renderCompare() {
-  const years = [...new Set(allData.map(r => r.year))].sort();
-  const months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-
-  // Compare chart
-  if (charts.compare) charts.compare.destroy();
+  const years = [...new Set(invoiceData.map(r=>r.year))].sort();
+  const months = Array.from({length:12},(_,i)=>String(i+1).padStart(2,'0'));
   const colors = ['#2563eb','#ef4444','#16a34a','#7c3aed','#ea580c'];
-  const datasets = years.map((year, i) => {
-    const data = months.map(m => {
-      const key = year + '/' + m;
-      return Math.round(allData.filter(r=>r.yearMonth===key).reduce((s,r)=>s+r.amount,0));
-    });
-    return {
-      label: year + '年',
-      data,
-      borderColor: colors[i % colors.length],
-      backgroundColor: colors[i % colors.length] + '22',
-      borderWidth: 2,
-      pointRadius: 4,
-      tension: 0.3,
-      fill: false,
-    };
+  const datasets = years.map((year,i)=>({
+    label:year+'年',
+    data:months.map(m=>{ const k=year+'/'+m; return Math.round(invoiceData.filter(r=>r.yearMonth===k).reduce((s,r)=>s+r.amount,0)); }),
+    borderColor:colors[i%colors.length], backgroundColor:colors[i%colors.length]+'22',
+    borderWidth:2, pointRadius:4, tension:.3, fill:false
+  }));
+  destroyChart('compare');
+  charts.compare = new Chart(document.getElementById('compareChart').getContext('2d'),{
+    type:'line', data:{ labels:months.map(m=>m+'月'), datasets },
+    options:{ responsive:true, plugins:{legend:{labels:{color:'#64748b',font:{size:12}}}}, scales:{ x:{ticks:{color:'#64748b'},grid:{color:'#f1f5f9'}}, y:{ticks:{color:'#64748b',callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}} } }
   });
 
-  const ctx = document.getElementById('compareChart').getContext('2d');
-  charts.compare = new Chart(ctx, {
-    type: 'line',
-    data: { labels: months.map(m=>m+'月'), datasets },
-    options: {
-      responsive: true,
-      plugins: { legend: { labels: { color: '#64748b', font: { size: 12 } } } },
-      scales: {
-        x: { ticks: { color: '#64748b' }, grid: { color: '#f1f5f9' } },
-        y: { ticks: { color: '#64748b', callback: v => '$' + v.toLocaleString() }, grid: { color: '#f1f5f9' } }
-      }
-    }
-  });
-
-  // Per-year tables
-  document.getElementById('compareWrap').innerHTML = years.map(year => {
-    const yearData = allData.filter(r => r.year === year);
-    const total = Math.round(yearData.reduce((s,r)=>s+r.amount,0));
-    const monthRows = months.map(m => {
-      const key = year + '/' + m;
-      const amt = Math.round(yearData.filter(r=>r.yearMonth===key).reduce((s,r)=>s+r.amount,0));
-      return amt > 0 ? `<tr><td>${m}月</td><td class="amt">$${amt.toLocaleString()}</td></tr>` : '';
-    }).join('');
-    return `
-    <div class="compare-col">
-      <div class="compare-header">
-        <span class="compare-year">${year}年</span>
-        <span class="compare-total">年度總計 $${total.toLocaleString()}</span>
-      </div>
-      <table class="month-table">
-        <thead><tr><th>月份</th><th style="text-align:right">金額</th></tr></thead>
-        <tbody>${monthRows}</tbody>
-      </table>
-    </div>`;
+  document.getElementById('compareWrap').innerHTML = years.map(year=>{
+    const yd = invoiceData.filter(r=>r.year===year);
+    const total = Math.round(yd.reduce((s,r)=>s+r.amount,0));
+    return `<div class="compare-col"><div class="compare-header"><span class="compare-year">${year}年</span><span class="compare-total">$${total.toLocaleString()}</span></div>
+    <table class="tbl"><thead><tr><th>月份</th><th style="text-align:right">金額</th></tr></thead><tbody>
+    ${months.map(m=>{ const k=year+'/'+m; const amt=Math.round(yd.filter(r=>r.yearMonth===k).reduce((s,r)=>s+r.amount,0)); return amt>0?`<tr><td>${m}月</td><td class="amt out">$${amt.toLocaleString()}</td></tr>`:''; }).join('')}
+    </tbody></table></div>`;
   }).join('');
+}
+
+// ── Taishin ───────────────────────────────────────────
+function renderTaishin() {
+  const year = document.getElementById('taishinYear').value;
+  const cat  = document.getElementById('taishinCat').value;
+  const q    = document.getElementById('taishinSearch').value.toLowerCase();
+  let data = taishinData.filter(r=>r.year===year);
+  if (cat) data = data.filter(r=>r.category===cat);
+  if (q) data = data.filter(r=>r.desc.toLowerCase().includes(q));
+
+  const total = data.reduce((s,r)=>s+r.amount,0);
+  const byMonth = {};
+  for (let m=1;m<=12;m++) byMonth[year+'/'+String(m).padStart(2,'0')]=0;
+  data.forEach(r=>{ byMonth[r.yearMonth]=(byMonth[r.yearMonth]||0)+r.amount; });
+  const months = Object.keys(byMonth).filter(k=>byMonth[k]>0).sort();
+  const byCat = {};
+  data.forEach(r=>{ byCat[r.category]=(byCat[r.category]||0)+r.amount; });
+
+  document.getElementById('taishinKpi').innerHTML = `
+    <div class="kpi"><div class="kpi-label">台新年度消費</div><div class="kpi-val red">$${Math.round(total).toLocaleString()}</div><div class="kpi-sub">${year}年</div></div>
+    <div class="kpi"><div class="kpi-label">消費筆數</div><div class="kpi-val blue">${data.length} 筆</div></div>
+    <div class="kpi"><div class="kpi-label">月均消費</div><div class="kpi-val purple">$${months.length?Math.round(total/months.length).toLocaleString():0}</div></div>`;
+
+  destroyChart('taishinChart');
+  if (months.length) {
+    const maxAmt = Math.max(...months.map(m=>byMonth[m]));
+    charts.taishinChart = new Chart(document.getElementById('taishinChart').getContext('2d'),{
+      type:'bar',
+      data:{ labels:months.map(m=>m.slice(5)+'月'), datasets:[{ data:months.map(m=>byMonth[m]), backgroundColor:'#7c3aed88', borderColor:'#7c3aed', borderWidth:1, borderRadius:5 }] },
+      options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false}}, y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}} } }
+    });
+  }
+
+  const sortedCats = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  destroyChart('taishinDonut');
+  if (sortedCats.length) {
+    charts.taishinDonut = new Chart(document.getElementById('taishinDonut').getContext('2d'),{
+      type:'doughnut',
+      data:{ labels:sortedCats.map(c=>c[0]), datasets:[{ data:sortedCats.map(c=>Math.round(c[1])), backgroundColor:sortedCats.map(c=>cc(c[0])+'cc'), borderColor:sortedCats.map(c=>cc(c[0])), borderWidth:1 }] },
+      options:{ responsive:true, cutout:'65%', plugins:{ legend:{labels:{color:'#64748b',font:{size:10},boxWidth:9}}, tooltip:{callbacks:{label:ctx=>` $${ctx.raw.toLocaleString()}`}} } }
+    });
+  }
+
+  document.getElementById('taishinCount').textContent = data.length + ' 筆';
+  const sorted = [...data].sort((a,b)=>b.date.localeCompare(a.date));
+  document.getElementById('taishinBody').innerHTML = sorted.map(r=>`
+    <tr>
+      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.date.slice(5)}</td>
+      <td>${r.desc}</td>
+      <td><span class="tag" style="background:${cc(r.category)}22;color:${cc(r.category)}">${r.category}</span></td>
+      <td class="amt out">$${Math.round(r.amount).toLocaleString()}</td>
+    </tr>`).join('');
+}
+
+// ── Merchant ──────────────────────────────────────────
+function renderMerchant() {
+  const source = document.getElementById('merchantSource').value;
+  const year   = document.getElementById('merchantYear').value;
+  const q      = document.getElementById('merchantSearch').value.toLowerCase();
+
+  let data = [];
+  if (source==='all'||source==='invoice') data.push(...invoiceData);
+  if (source==='all'||source==='taishin') data.push(...taishinData);
+  if (year) data = data.filter(r=>r.year===year);
+
+  // Group by merchant/desc
+  const byMerchant = {};
+  data.forEach(r => {
+    const key = r.source==='invoice' ? r.seller : r.desc;
+    if (!byMerchant[key]) byMerchant[key] = { name:key, total:0, count:0, category:r.category, months:new Set() };
+    byMerchant[key].total += r.amount;
+    byMerchant[key].count++;
+    byMerchant[key].months.add(r.yearMonth);
+  });
+
+  let merchants = Object.values(byMerchant).sort((a,b)=>b.total-a.total);
+  if (q) merchants = merchants.filter(m=>m.name.toLowerCase().includes(q));
+
+  document.getElementById('merchantGrid').innerHTML = merchants.slice(0,60).map(m=>`
+    <div class="merchant-card">
+      <div class="merchant-name" title="${m.name}">${m.name}</div>
+      <span class="merchant-cat" style="background:${cc(m.category)}22;color:${cc(m.category)}">${m.category}</span>
+      <div class="merchant-total">$${Math.round(m.total).toLocaleString()}</div>
+      <div class="merchant-sub">${m.count} 筆　${m.months.size} 個月</div>
+    </div>`).join('');
 }
 
 // ── Detail ────────────────────────────────────────────
 function renderDetail() {
-  const year = document.getElementById('detailYear').value;
-  const cat = document.getElementById('detailCat').value;
-  let data = allData.filter(r => r.year === year);
-  if (cat) data = data.filter(r => r.category === cat);
-  data = data.sort((a,b) => b.date.localeCompare(a.date));
+  const source = document.getElementById('detailSource').value;
+  const year   = document.getElementById('detailYear').value;
+  const cat    = document.getElementById('detailCat').value;
+  const q      = document.getElementById('detailSearch').value.toLowerCase();
 
-  document.getElementById('txBody').innerHTML = data.map(r => `
-  <tr>
-    <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px">${r.date.slice(5)}</td>
-    <td>${r.seller}</td>
-    <td style="color:var(--muted)">${r.item.slice(0,20)}</td>
-    <td><span class="tx-tag" style="background:${catColor(r.category)}22;color:${catColor(r.category)}">${r.category}</span></td>
-    <td class="tx-amt">$${Math.round(r.amount).toLocaleString()}</td>
-  </tr>`).join('');
+  let data = [];
+  if (source==='all'||source==='invoice') data.push(...invoiceData);
+  if (source==='all'||source==='taishin') data.push(...taishinData);
+  if (year) data = data.filter(r=>r.year===year);
+  if (cat) data = data.filter(r=>r.category===cat);
+  if (q) data = data.filter(r=>(r.display||'').toLowerCase().includes(q)||(r.category||'').toLowerCase().includes(q));
+  data = data.sort((a,b)=>b.date.localeCompare(a.date));
+
+  document.getElementById('detailCount').textContent = data.length + ' 筆';
+  document.getElementById('detailBody').innerHTML = data.slice(0,300).map(r=>`
+    <tr>
+      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.date.slice(5)}</td>
+      <td>${r.display||r.seller||r.desc}</td>
+      <td><span class="tag" style="background:${cc(r.category)}22;color:${cc(r.category)}">${r.category}</span></td>
+      <td style="font-size:11px;color:var(--muted)">${r.source==='taishin'?'台新':'發票'}</td>
+      <td class="amt out">$${Math.round(r.amount).toLocaleString()}</td>
+    </tr>`).join('');
 }
 
 // ── Insights ──────────────────────────────────────────
 function renderInsights() {
+  const allData = [...invoiceData,...taishinData];
   const years = [...new Set(allData.map(r=>r.year))].sort().reverse();
   const latestYear = years[0];
-  const yearData = allData.filter(r=>r.year===latestYear);
-  const total = yearData.reduce((s,r)=>s+r.amount,0);
+  const yd = allData.filter(r=>r.year===latestYear);
+  const total = yd.reduce((s,r)=>s+r.amount,0);
   const byCat = {};
-  yearData.forEach(r => { byCat[r.category]=(byCat[r.category]||0)+r.amount; });
+  yd.forEach(r=>{ byCat[r.category]=(byCat[r.category]||0)+r.amount; });
   const topCat = Object.entries(byCat).sort((a,b)=>b[1]-a[1])[0];
-  const mcCount = yearData.filter(r=>r.seller.includes('和德昌')||r.seller.includes('麥當勞')).length;
-  const parking = Math.round(byCat['交通停車']||0);
   const sub = Math.round(byCat['訂閱服務']||0);
+  const mcCount = yd.filter(r=>(r.seller||r.desc||'').includes('和德昌')||(r.seller||r.desc||'').includes('麥當勞')).length;
+  const parking = Math.round(byCat['交通停車']||0);
+
+  // Netflix monthly
+  const netflixData = allData.filter(r=>(r.seller||r.desc||'').toLowerCase().includes('netflix'));
+  const netflixTotal = Math.round(netflixData.reduce((s,r)=>s+r.amount,0));
+  const netflixMonths = new Set(netflixData.map(r=>r.yearMonth)).size;
 
   const insights = [
-    { icon:'💡', title:'最大支出類別', desc:`${latestYear}年「${topCat?.[0]}」花最多，共 $${Math.round(topCat?.[1]||0).toLocaleString()}，佔總支出 ${((topCat?.[1]||0)/total*100).toFixed(0)}%。` },
+    { icon:'💡', title:'最大支出類別', desc:`${latestYear}年「${topCat?.[0]}」佔最多，共 $${Math.round(topCat?.[1]||0).toLocaleString()}，佔總支出 ${((topCat?.[1]||0)/total*100).toFixed(0)}%。` },
+    { icon:'📱', title:'訂閱服務費用', desc:`${latestYear}年訂閱服務合計 $${sub.toLocaleString()}，建議定期清查是否有閒置訂閱。` },
+    { icon:'🎬', title:'Netflix 消費', desc:`累計 Netflix 支出 $${netflixTotal.toLocaleString()}，共 ${netflixMonths} 個月，月均 $${netflixMonths?Math.round(netflixTotal/netflixMonths):0}。` },
     { icon:'🍔', title:'麥當勞消費', desc:`${latestYear}年麥當勞消費 ${mcCount} 次，建議辦理 App 會員賺點數回饋。` },
-    { icon:'📱', title:'訂閱服務費用', desc:`訂閱服務年度合計 $${sub.toLocaleString()}，建議定期清查是否有閒置訂閱。` },
-    { icon:'🚗', title:'停車費用', desc:`${latestYear}年停車費共 $${parking.toLocaleString()}，若每月固定停同一停車場，建議評估月租方案。` },
-    { icon:'📊', title:'資料涵蓋', desc:`目前共有 ${years.join('、')} 年的資料，合計 ${allData.length} 筆消費記錄。` },
-    { icon:'💰', title:'總消費統計', desc:`所有年份總支出 $${Math.round(allData.reduce((s,r)=>s+r.amount,0)).toLocaleString()}，持續追蹤有助於掌握消費趨勢。` },
+    { icon:'🚗', title:'停車費用', desc:`${latestYear}年停車費共 $${parking.toLocaleString()}，若固定停同一停車場，建議評估月租方案。` },
+    { icon:'📊', title:'資料總覽', desc:`目前涵蓋 ${years.join('、')} 年，發票 ${invoiceData.length} 筆 + 台新信用卡 ${taishinData.length} 筆，合計 ${allData.length} 筆。` },
   ];
 
-  document.getElementById('insightGrid').innerHTML = insights.map(ins => `
-  <div class="insight-card">
-    <div class="insight-icon">${ins.icon}</div>
-    <div class="insight-title">${ins.title}</div>
-    <div class="insight-desc">${ins.desc}</div>
-  </div>`).join('');
+  document.getElementById('insightGrid').innerHTML = insights.map(ins=>`
+    <div class="insight-card"><div class="insight-icon">${ins.icon}</div><div class="insight-title">${ins.title}</div><div class="insight-desc">${ins.desc}</div></div>`).join('');
 }
 
-// ── Tab Switch ────────────────────────────────────────
+// ── Utils ─────────────────────────────────────────────
 function showTab(id, btn) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -909,7 +677,10 @@ function showTab(id, btn) {
   btn.classList.add('active');
 }
 
-// ── Init Google Sign-In ───────────────────────────────
+function destroyChart(key) {
+  if (charts[key]) { charts[key].destroy(); delete charts[key]; }
+}
+
 window.onload = () => {
   const script = document.createElement('script');
   script.src = 'https://accounts.google.com/gsi/client';
