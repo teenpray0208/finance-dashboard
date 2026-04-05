@@ -189,14 +189,6 @@ canvas{max-height:220px;}
         <!-- 信用卡負債區 -->
         <div class="card-title" style="margin-bottom:10px;font-size:14px;font-weight:500;">💳 信用卡負債狀況</div>
         <div id="debtCards"></div>
-        <!-- 繳款記錄彙整 -->
-        <div class="card">
-          <div class="card-title"><span>近期繳款記錄</span><span class="badge" id="homePayCount"></span></div>
-          <table class="pay-tbl">
-            <thead><tr><th>日期</th><th>銀行</th><th>摘要</th><th style="text-align:right">繳款金額</th></tr></thead>
-            <tbody id="homePayBody"></tbody>
-          </table>
-        </div>
       </div>
 
       <!-- 發票總覽 -->
@@ -613,6 +605,7 @@ function renderHome() {
     <div class="kpi"><div class="kpi-label">遠東累計已繳</div><div class="kpi-val blue">$${Math.round(fareastPaid).toLocaleString()}</div><div class="kpi-sub">${fareastPayData.length} 筆記錄</div></div>`;
 
   document.getElementById('homeDataSrc').textContent = `發票 + 台新 共 ${allData.length} 筆`;
+  // 繳款明細移至「繳款記錄」分頁
 
   destroyChart('homeTrend');
   charts.homeTrend = new Chart(document.getElementById('homeTrendChart').getContext('2d'),{
@@ -632,7 +625,7 @@ function renderHome() {
   });
 
   // 負債卡
-  const debtHTML = (bank, debt, paid, cssClass) => {
+  const debtHTML = (bank, debt, paid) => {
     const remaining = Math.max(0, debt.bill - debt.paid);
     const monthlyInterest = Math.round(remaining * debt.rate / 100 / 12);
     return `<div class="debt-card ${remaining===0?'ok':''}">
@@ -650,16 +643,6 @@ function renderHome() {
   document.getElementById('debtCards').innerHTML =
     debtHTML('台新', TAISHIN_DEBT, taishinPaid) +
     (FAREAST_DEBT.bill > 0 ? debtHTML('遠東', FAREAST_DEBT, fareastPaid) : '');
-
-  // 近期繳款（最近10筆）
-  document.getElementById('homePayCount').textContent = allPay.length + ' 筆';
-  document.getElementById('homePayBody').innerHTML = allPay.slice(0,10).map(r=>`
-    <tr>
-      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.txDate}</td>
-      <td><span style="font-size:10px;padding:1px 6px;border-radius:3px;background:${r.bank==='台新'?'#eff6ff':'#f0fdf4'};color:${r.bank==='台新'?'#2563eb':'#16a34a'}">${r.bank}</span></td>
-      <td style="font-size:12px;color:var(--muted)">${r.summary}</td>
-      <td class="amt" style="font-family:'Space Mono',monospace;text-align:right;color:var(--green)">$${Math.round(r.amount).toLocaleString()}</td>
-    </tr>`).join('');
 }
 
 // ── Payment Tab ───────────────────────────────────────
