@@ -531,6 +531,7 @@ function parseFubonPayCsv(content) {
 }
 
 
+function splitCsv(line) {
   const r = []; let c = '', q = false;
   for (const ch of line) {
     if (ch==='"') q=!q;
@@ -659,6 +660,7 @@ function renderHome() {
 function renderPayment() {
   const taishinPaid  = taishinPayData.reduce((s,r)=>s+r.amount,0);
   const fareastPaid  = fareastPayData.reduce((s,r)=>s+r.amount,0);
+  const fubonPaid    = fubonPayData.reduce((s,r)=>s+r.amount,0);
 
   const debtHTML = (bank, debt, paid) => {
     const remaining = Math.max(0, debt.bill - debt.paid);
