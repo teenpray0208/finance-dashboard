@@ -182,10 +182,6 @@ canvas{max-height:220px;}
       <!-- 財務總表 -->
       <div class="section active" id="tab-home">
         <div class="kpi-row" id="homeKpi"></div>
-        <div class="grid-7-5">
-          <div class="card"><div class="card-title"><span>近12個月消費走勢</span><span class="badge" id="homeDataSrc"></span></div><canvas id="homeTrendChart"></canvas></div>
-          <div class="card"><div class="card-title"><span>支出分類總覽</span></div><canvas id="homeDonutChart"></canvas></div>
-        </div>
         <!-- 信用卡負債區 -->
         <div class="card-title" style="margin-bottom:10px;font-size:14px;font-weight:500;">💳 信用卡負債狀況</div>
         <div id="debtCards"></div>
@@ -603,26 +599,6 @@ function renderHome() {
     <div class="kpi"><div class="kpi-label">台新未還餘額</div><div class="kpi-val red">$${(TAISHIN_DEBT.bill - TAISHIN_DEBT.paid).toLocaleString()}</div><div class="kpi-sub">年利率 ${TAISHIN_DEBT.rate}%</div></div>
     <div class="kpi"><div class="kpi-label">台新累計已繳</div><div class="kpi-val green">$${Math.round(taishinPaid).toLocaleString()}</div><div class="kpi-sub">${taishinPayData.length} 筆記錄</div></div>
     <div class="kpi"><div class="kpi-label">遠東累計已繳</div><div class="kpi-val blue">$${Math.round(fareastPaid).toLocaleString()}</div><div class="kpi-sub">${fareastPayData.length} 筆記錄</div></div>`;
-
-  document.getElementById('homeDataSrc').textContent = `發票 + 台新 共 ${allData.length} 筆`;
-  // 繳款明細移至「繳款記錄」分頁
-
-  destroyChart('homeTrend');
-  charts.homeTrend = new Chart(document.getElementById('homeTrendChart').getContext('2d'),{
-    type:'bar',
-    data:{ labels:months12.map(m=>m.slice(5)+'月'), datasets:[{ data:months12.map(m=>byMonth12[m]||0), backgroundColor:'#2563eb88', borderColor:'#2563eb', borderWidth:1, borderRadius:5 }] },
-    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false}}, y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}} } }
-  });
-
-  const byCat = {};
-  allData.forEach(r=>{ byCat[r.category]=(byCat[r.category]||0)+r.amount; });
-  const sortedCats = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
-  destroyChart('homeDonut');
-  charts.homeDonut = new Chart(document.getElementById('homeDonutChart').getContext('2d'),{
-    type:'doughnut',
-    data:{ labels:sortedCats.map(c=>c[0]), datasets:[{ data:sortedCats.map(c=>Math.round(c[1])), backgroundColor:sortedCats.map(c=>cc(c[0])+'cc'), borderColor:sortedCats.map(c=>cc(c[0])), borderWidth:1 }] },
-    options:{ responsive:true, cutout:'65%', plugins:{ legend:{labels:{color:'#64748b',font:{size:10},boxWidth:9}}, tooltip:{callbacks:{label:ctx=>` $${ctx.raw.toLocaleString()}`}} } }
-  });
 
   // 負債卡
   const debtHTML = (bank, debt, paid) => {
