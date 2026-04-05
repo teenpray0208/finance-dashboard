@@ -16,7 +16,6 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-serif;font-size:14px;min-height:100vh;}
 
-/* Login */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#eff6ff,#f8f9fb);}
 .login-card{background:#fff;border-radius:16px;padding:48px;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:400px;width:90%;}
 .login-logo{font-family:'Space Mono',monospace;font-size:20px;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
@@ -24,12 +23,12 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans TC',sans-seri
 .btn-google{display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:12px 24px;font-size:14px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;width:100%;transition:all .2s;color:var(--text);}
 .btn-google:hover{background:var(--surface2);border-color:var(--accent);}
 
-/* App */
 #app{display:none;}
 header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.04);}
 .logo{font-family:'Space Mono',monospace;font-size:14px;color:var(--accent);letter-spacing:2px;}
 .header-right{display:flex;align-items:center;gap:10px;}
 .user-info{font-size:12px;color:var(--muted);}
+.update-time{font-size:11px;color:var(--muted2);font-family:'Space Mono',monospace;background:var(--surface2);padding:4px 10px;border-radius:5px;white-space:nowrap;}
 .btn-refresh{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;transition:all .2s;}
 .btn-refresh:hover{background:#1d4ed8;}
 .btn-logout{background:none;border:1px solid var(--border);border-radius:6px;padding:7px 14px;font-size:12px;font-family:'Noto Sans TC',sans-serif;cursor:pointer;color:var(--muted);transition:all .2s;}
@@ -41,14 +40,12 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 
 .main{padding:20px;max-width:1400px;margin:0 auto;}
 
-/* Tabs */
 .tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:10px;width:fit-content;flex-wrap:wrap;}
 .tab{background:none;border:none;padding:7px 16px;border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:all .2s;white-space:nowrap;}
 .tab.active{background:#fff;color:var(--accent);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 .section{display:none;}
 .section.active{display:block;}
 
-/* KPI */
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
 .kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
@@ -56,7 +53,6 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .kpi-val.blue{color:var(--accent)}.kpi-val.red{color:var(--warn)}.kpi-val.green{color:var(--green)}.kpi-val.purple{color:var(--purple)}.kpi-val.orange{color:var(--orange)}
 .kpi-sub{font-size:11px;color:var(--muted);margin-top:4px;}
 
-/* Grid */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px;}
 .grid-7-5{display:grid;grid-template-columns:7fr 5fr;gap:14px;margin-bottom:14px;}
@@ -66,17 +62,35 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .card-title{font-size:13px;font-weight:500;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .badge{font-size:10px;padding:2px 8px;background:var(--accent-l);color:var(--accent);border-radius:4px;font-family:'Space Mono',monospace;}
 
-/* Search */
+/* 負債警示卡 */
+.debt-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px 20px;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:14px;border-left:4px solid var(--warn);}
+.debt-card.ok{border-left-color:var(--green);}
+.debt-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.debt-bank{font-size:13px;font-weight:500;}
+.debt-badge{font-size:10px;padding:2px 8px;border-radius:4px;}
+.debt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;}
+.debt-item{background:var(--surface2);border-radius:7px;padding:10px 12px;}
+.debt-item-label{font-size:10px;color:var(--muted);margin-bottom:4px;}
+.debt-item-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;}
+.debt-item-val.red{color:var(--warn);}
+.debt-item-val.green{color:var(--green);}
+.debt-item-val.orange{color:var(--orange);}
+
+/* 繳款記錄表 */
+.pay-tbl{width:100%;border-collapse:collapse;}
+.pay-tbl th{text-align:left;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;padding:0 0 9px;border-bottom:1px solid var(--border);font-weight:400;}
+.pay-tbl td{padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12px;}
+.pay-tbl tr:last-child td{border-bottom:none;}
+.pay-tbl .amt{font-family:'Space Mono',monospace;text-align:right;color:var(--warn);}
+
 .search-wrap{position:relative;margin-bottom:12px;}
 .search-input{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 12px 8px 34px;font-family:'Noto Sans TC',sans-serif;font-size:13px;background:#fff;color:var(--text);outline:none;transition:border .2s;}
 .search-input:focus{border-color:var(--accent);}
 .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;}
 
-/* Select */
 .sel{border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Noto Sans TC',sans-serif;font-size:12px;background:#fff;cursor:pointer;color:var(--text);}
 .filter-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 
-/* Tables */
 .tbl{width:100%;border-collapse:collapse;}
 .tbl th{text-align:left;font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;padding:0 0 9px;border-bottom:1px solid var(--border);font-weight:400;}
 .tbl td{padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12px;vertical-align:top;}
@@ -85,7 +99,6 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .tbl .amt.out{color:var(--warn);}
 .tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:3px;margin-left:4px;}
 
-/* Category list */
 .cat-list{display:flex;flex-direction:column;gap:10px;}
 .cat-row{display:flex;align-items:center;gap:8px;}
 .cat-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
@@ -95,19 +108,16 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .cat-bar-bg{height:3px;background:var(--surface2);border-radius:2px;margin-top:3px;}
 .cat-bar{height:100%;border-radius:2px;}
 
-/* Month table */
 .bar-cell{width:100px;}
 .bar-bg{height:5px;background:var(--surface2);border-radius:3px;}
 .bar-fill{height:100%;background:var(--accent);border-radius:3px;transition:width .5s;}
 
-/* Year compare */
 .compare-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
 .compare-col{}
 .compare-header{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;}
 .compare-year{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--accent);}
 .compare-total{font-family:'Space Mono',monospace;font-size:12px;color:var(--warn);}
 
-/* Merchant tracker */
 .merchant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;}
 .merchant-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
 .merchant-name{font-size:13px;font-weight:500;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -115,7 +125,6 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .merchant-total{font-family:'Space Mono',monospace;font-size:18px;font-weight:700;color:var(--warn);}
 .merchant-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 
-/* Insight */
 .insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
 .insight-card{background:#fff;border:1px solid var(--border);border-radius:8px;padding:15px;}
 .insight-icon{font-size:20px;margin-bottom:7px;}
@@ -129,6 +138,7 @@ canvas{max-height:220px;}
   .grid-3{grid-template-columns:1fr 1fr;}
   .main{padding:12px;}
   header{padding:12px 16px;}
+  .update-time{display:none;}
 }
 </style>
 </head>
@@ -138,7 +148,7 @@ canvas{max-height:220px;}
   <div class="login-card">
     <div class="login-logo">FINANCE PULSE</div>
     <div class="login-sub">個人財務儀表板</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6">登入後自動讀取 Google Drive 資料<br>發票載具 + 台新信用卡</p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.6">登入後自動讀取 Google Drive 資料<br>發票載具 + 台新信用卡 + 繳款記錄</p>
     <button class="btn-google" onclick="signIn()">
       <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 002.38-5.88c0-.57-.05-.66-.15-1.18z"/><path fill="#34A853" d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 01-7.18-2.54H1.83v2.07A8 8 0 008.98 17z"/><path fill="#FBBC05" d="M4.5 10.52a4.8 4.8 0 010-3.04V5.41H1.83a8 8 0 000 7.18l2.67-2.07z"/><path fill="#EA4335" d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 001.83 5.4L4.5 7.49a4.77 4.77 0 014.48-3.3z"/></svg>
       使用 Google 帳號登入
@@ -150,7 +160,7 @@ canvas{max-height:220px;}
   <header>
     <div class="logo">FINANCE PULSE</div>
     <div class="header-right">
-      <span class="user-info" id="userInfo"></span>
+      <span class="update-time" id="updateTime">—</span>
       <button class="btn-refresh" onclick="loadData()">🔄 更新資料</button>
       <button class="btn-logout" onclick="signOut()">登出</button>
     </div>
@@ -159,16 +169,38 @@ canvas{max-height:220px;}
     <div id="loading" style="display:none"><div class="spinner"></div><p>正在讀取資料...</p></div>
     <div id="dashboard" style="display:none">
       <div class="tabs">
-        <button class="tab active" onclick="showTab('overview',this)">📊 發票總覽</button>
+        <button class="tab active" onclick="showTab('home',this)">🏠 財務總表</button>
+        <button class="tab" onclick="showTab('overview',this)">📊 發票總覽</button>
         <button class="tab" onclick="showTab('compare',this)">📅 跨年比較</button>
         <button class="tab" onclick="showTab('taishin',this)">💳 台新信用卡</button>
+        <button class="tab" onclick="showTab('payment',this)">💰 繳款記錄</button>
         <button class="tab" onclick="showTab('merchant',this)">🏪 商家追蹤</button>
         <button class="tab" onclick="showTab('detail',this)">🧾 消費明細</button>
         <button class="tab" onclick="showTab('insights',this)">💡 洞察</button>
       </div>
 
+      <!-- 財務總表 -->
+      <div class="section active" id="tab-home">
+        <div class="kpi-row" id="homeKpi"></div>
+        <div class="grid-7-5">
+          <div class="card"><div class="card-title"><span>近12個月消費走勢</span><span class="badge" id="homeDataSrc"></span></div><canvas id="homeTrendChart"></canvas></div>
+          <div class="card"><div class="card-title"><span>支出分類總覽</span></div><canvas id="homeDonutChart"></canvas></div>
+        </div>
+        <!-- 信用卡負債區 -->
+        <div class="card-title" style="margin-bottom:10px;font-size:14px;font-weight:500;">💳 信用卡負債狀況</div>
+        <div id="debtCards"></div>
+        <!-- 繳款記錄彙整 -->
+        <div class="card">
+          <div class="card-title"><span>近期繳款記錄</span><span class="badge" id="homePayCount"></span></div>
+          <table class="pay-tbl">
+            <thead><tr><th>日期</th><th>銀行</th><th>摘要</th><th style="text-align:right">繳款金額</th></tr></thead>
+            <tbody id="homePayBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- 發票總覽 -->
-      <div class="section active" id="tab-overview">
+      <div class="section" id="tab-overview">
         <div class="filter-row">
           <label style="font-size:12px;color:var(--muted)">年份：</label>
           <select class="sel" id="yearSelect" onchange="renderOverview()"></select>
@@ -209,6 +241,27 @@ canvas{max-height:220px;}
             <thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th style="text-align:right">金額</th></tr></thead>
             <tbody id="taishinBody"></tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- 繳款記錄 -->
+      <div class="section" id="tab-payment">
+        <div id="paymentDebtCards" style="margin-bottom:14px;"></div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title"><span>台新繳款記錄</span><span class="badge" id="taishinPayCount"></span></div>
+            <table class="pay-tbl">
+              <thead><tr><th>日期</th><th>摘要</th><th style="text-align:right">金額</th></tr></thead>
+              <tbody id="taishinPayBody"></tbody>
+            </table>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>遠東繳款記錄</span><span class="badge" id="fareastPayCount"></span></div>
+            <table class="pay-tbl">
+              <thead><tr><th>日期</th><th>摘要</th><th style="text-align:right">金額</th></tr></thead>
+              <tbody id="fareastPayBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
@@ -262,11 +315,19 @@ canvas{max-height:220px;}
 <script>
 const CLIENT_ID = '300122945168-fa0n4ne40fjja2vnbvs4tg2ptadhqfrp.apps.googleusercontent.com';
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
-const INVOICE_FOLDER = '01 發票資料';
-const TAISHIN_FOLDER = '02 台新信用卡';
+const INVOICE_FOLDER_NAME    = '01 發票資料';
+const TAISHIN_FOLDER_NAME    = '02 台新信用卡';
+const TAISHIN_PAY_FOLDER_ID  = '1AeswiQB_-WwIjxkc4RTfe5el4NEHlshF';
+const FAREAST_PAY_FOLDER_ID  = '1na2oWLgE9RMTrkaK2vitWXBG3fb7f5ET';
+
+// 台新當前負債（每月手動更新）
+const TAISHIN_DEBT = { bill: 88014, paid: 0, rate: 15 };
+// 遠東當前負債（每月手動更新）
+const FAREAST_DEBT = { bill: 0, paid: 0, rate: 0 };
 
 let tokenClient, accessToken = null;
 let invoiceData = [], taishinData = [];
+let taishinPayData = [], fareastPayData = [];
 let charts = {};
 
 // ── Auth ──────────────────────────────────────────────
@@ -286,6 +347,7 @@ function signIn() { tokenClient.requestAccessToken(); }
 function signOut() {
   google.accounts.oauth2.revoke(accessToken);
   accessToken = null; invoiceData = []; taishinData = [];
+  taishinPayData = []; fareastPayData = [];
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
 }
@@ -295,8 +357,17 @@ async function loadData() {
   document.getElementById('loading').style.display = 'block';
   document.getElementById('dashboard').style.display = 'none';
   try {
-    invoiceData = await loadFolderCsvs(INVOICE_FOLDER, parseInvoiceCsv);
-    taishinData = await loadFolderCsvs(TAISHIN_FOLDER, parseTaishinCsv);
+    invoiceData   = await loadFolderCsvsByName(INVOICE_FOLDER_NAME, parseInvoiceCsv);
+    taishinData   = await loadFolderCsvsByName(TAISHIN_FOLDER_NAME, parseTaishinCsv);
+    taishinPayData = await loadFolderCsvsByID(TAISHIN_PAY_FOLDER_ID, parseTaishinPayCsv);
+    fareastPayData = await loadFolderCsvsByID(FAREAST_PAY_FOLDER_ID, parseFarEastPayCsv);
+
+    // 更新時間
+    const now = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('updateTime').textContent =
+      `${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
     renderAll();
     document.getElementById('loading').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
@@ -307,7 +378,7 @@ async function loadData() {
   }
 }
 
-async function loadFolderCsvs(folderName, parser) {
+async function loadFolderCsvsByName(folderName, parser) {
   const folderRes = await driveGet(`files?q=name='${folderName}' and mimeType='application/vnd.google-apps.folder' and trashed=false&fields=files(id)`);
   if (!folderRes.files?.length) return [];
   const folderId = folderRes.files[0].id;
@@ -319,6 +390,20 @@ async function loadFolderCsvs(folderName, parser) {
     rows.push(...parser(text));
   }
   return rows;
+}
+
+async function loadFolderCsvsByID(folderId, parser) {
+  try {
+    const filesRes = await driveGet(`files?q='${folderId}' in parents and trashed=false&fields=files(id,name)`);
+    if (!filesRes.files?.length) return [];
+    const rows = [];
+    for (const file of filesRes.files) {
+      const res = await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`, { headers: { Authorization: `Bearer ${accessToken}` } });
+      const text = await res.text();
+      rows.push(...parser(text));
+    }
+    return rows;
+  } catch(e) { return []; }
 }
 
 async function driveGet(path) {
@@ -373,6 +458,54 @@ function parseTaishinCsv(content) {
   return rows;
 }
 
+function parseTaishinPayCsv(content) {
+  const lines = content.split('\n');
+  const rows = [];
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cols = splitCsv(line);
+    const first = cols[0] ? cols[0].trim() : '';
+    if (first === '交易日' || first.includes('台新銀行') || first.includes('共') || first === '') continue;
+    const dateMatch = first.match(/^(\d{4}\/\d{2}\/\d{2})/);
+    if (!dateMatch) continue;
+    const txDate  = dateMatch[1];
+    const summary = cols[2] ? cols[2].trim() : '';
+    const amtStr  = cols[3] ? cols[3].trim().replace(/,/g,'') : '';
+    const note    = cols[5] ? cols[5].trim() : '';
+    const isPayment = summary.includes('繳台新卡費') || (summary.includes('媒體轉帳') && note.includes('台新卡費'));
+    if (!isPayment) continue;
+    const amount = Math.abs(parseFloat(amtStr));
+    if (isNaN(amount) || amount === 0) continue;
+    rows.push({ txDate, yearMonth: txDate.slice(0,7), summary, amount, bank: '台新' });
+  }
+  return rows;
+}
+
+function parseFarEastPayCsv(content) {
+  const lines = content.split('\n');
+  const rows = [];
+  let inData = false;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cols = splitCsv(line);
+    const first = cols[0] ? cols[0].trim() : '';
+    if (first === '交易日期') { inData = true; continue; }
+    if (!inData) continue;
+    const dateMatch = first.match(/^(\d{4}\/\d{2}\/\d{2})/);
+    if (!dateMatch) continue;
+    const txDate  = dateMatch[1];
+    const summary = cols[2] ? cols[2].trim() : '';
+    if (!summary.includes('繳遠銀卡款')) continue;
+    const outStr = cols[3] ? cols[3].trim().replace(/,/g,'') : '';
+    const amount = parseFloat(outStr);
+    if (isNaN(amount) || amount <= 0) continue;
+    rows.push({ txDate, yearMonth: txDate.slice(0,7), summary, amount, bank: '遠東' });
+  }
+  return rows;
+}
+
 function splitCsv(line) {
   const r = []; let c = '', q = false;
   for (const ch of line) {
@@ -389,7 +522,6 @@ function cleanSeller(s) {
     .replace('台灣屈臣氏個人用品商店','屈臣氏').slice(0,20);
 }
 
-// ── Categories & Colors ───────────────────────────────
 function categorize(seller, item) {
   const c = (seller+' '+(item||'')).toLowerCase();
   const inc = k => k.some(x => c.includes(x));
@@ -423,19 +555,16 @@ function cc(cat) { return CAT_COLORS[cat] || '#94a3b8'; }
 
 // ── Render All ────────────────────────────────────────
 function renderAll() {
-  const invYears = [...new Set(invoiceData.map(r=>r.year))].sort().reverse();
-  const taishinYears = [...new Set(taishinData.map(r=>r.year))].sort().reverse();
-  const allYears = [...new Set([...invYears,...taishinYears])].sort().reverse();
+  const invYears    = [...new Set(invoiceData.map(r=>r.year))].sort().reverse();
+  const taishinYears= [...new Set(taishinData.map(r=>r.year))].sort().reverse();
+  const allYears    = [...new Set([...invYears,...taishinYears])].sort().reverse();
 
   ['yearSelect','detailYear'].forEach(id => {
     const s = document.getElementById(id);
     s.innerHTML = invYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
   });
-  const taishinYearSel = document.getElementById('taishinYear');
-  taishinYearSel.innerHTML = taishinYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
-
-  const merchantYearSel = document.getElementById('merchantYear');
-  merchantYearSel.innerHTML = '<option value="">全部年份</option>' + allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+  document.getElementById('taishinYear').innerHTML = taishinYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+  document.getElementById('merchantYear').innerHTML = '<option value="">全部年份</option>' + allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
 
   const cats = [...new Set([...invoiceData,...taishinData].map(r=>r.category))].sort();
   ['detailCat','taishinCat'].forEach(id => {
@@ -445,12 +574,135 @@ function renderAll() {
     if (cur) s.value = cur;
   });
 
+  renderHome();
   renderOverview();
   renderCompare();
   renderTaishin();
+  renderPayment();
   renderMerchant();
   renderDetail();
   renderInsights();
+}
+
+// ── Home（財務總表）──────────────────────────────────
+function renderHome() {
+  const allData = [...invoiceData, ...taishinData];
+  const allPay  = [...taishinPayData, ...fareastPayData].sort((a,b)=>b.txDate.localeCompare(a.txDate));
+
+  // 近12個月
+  const now = new Date();
+  const months12 = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+    months12.push(d.getFullYear()+'/'+String(d.getMonth()+1).padStart(2,'0'));
+  }
+
+  const byMonth12 = {};
+  months12.forEach(m => byMonth12[m] = 0);
+  allData.filter(r=>months12.includes(r.yearMonth)).forEach(r=>{ byMonth12[r.yearMonth]=(byMonth12[r.yearMonth]||0)+r.amount; });
+
+  const totalThisYear = allData.filter(r=>r.year===String(now.getFullYear())).reduce((s,r)=>s+r.amount,0);
+  const totalPay = allPay.reduce((s,r)=>s+r.amount,0);
+  const taishinPaid = taishinPayData.reduce((s,r)=>s+r.amount,0);
+  const fareastPaid = fareastPayData.reduce((s,r)=>s+r.amount,0);
+
+  document.getElementById('homeKpi').innerHTML = `
+    <div class="kpi"><div class="kpi-label">今年總支出</div><div class="kpi-val red">$${Math.round(totalThisYear).toLocaleString()}</div><div class="kpi-sub">發票 + 台新</div></div>
+    <div class="kpi"><div class="kpi-label">台新未還餘額</div><div class="kpi-val red">$${(TAISHIN_DEBT.bill - TAISHIN_DEBT.paid).toLocaleString()}</div><div class="kpi-sub">年利率 ${TAISHIN_DEBT.rate}%</div></div>
+    <div class="kpi"><div class="kpi-label">台新累計已繳</div><div class="kpi-val green">$${Math.round(taishinPaid).toLocaleString()}</div><div class="kpi-sub">${taishinPayData.length} 筆記錄</div></div>
+    <div class="kpi"><div class="kpi-label">遠東累計已繳</div><div class="kpi-val blue">$${Math.round(fareastPaid).toLocaleString()}</div><div class="kpi-sub">${fareastPayData.length} 筆記錄</div></div>`;
+
+  document.getElementById('homeDataSrc').textContent = `發票 + 台新 共 ${allData.length} 筆`;
+
+  destroyChart('homeTrend');
+  charts.homeTrend = new Chart(document.getElementById('homeTrendChart').getContext('2d'),{
+    type:'bar',
+    data:{ labels:months12.map(m=>m.slice(5)+'月'), datasets:[{ data:months12.map(m=>byMonth12[m]||0), backgroundColor:'#2563eb88', borderColor:'#2563eb', borderWidth:1, borderRadius:5 }] },
+    options:{ responsive:true, plugins:{legend:{display:false}}, scales:{ x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false}}, y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}} } }
+  });
+
+  const byCat = {};
+  allData.forEach(r=>{ byCat[r.category]=(byCat[r.category]||0)+r.amount; });
+  const sortedCats = Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  destroyChart('homeDonut');
+  charts.homeDonut = new Chart(document.getElementById('homeDonutChart').getContext('2d'),{
+    type:'doughnut',
+    data:{ labels:sortedCats.map(c=>c[0]), datasets:[{ data:sortedCats.map(c=>Math.round(c[1])), backgroundColor:sortedCats.map(c=>cc(c[0])+'cc'), borderColor:sortedCats.map(c=>cc(c[0])), borderWidth:1 }] },
+    options:{ responsive:true, cutout:'65%', plugins:{ legend:{labels:{color:'#64748b',font:{size:10},boxWidth:9}}, tooltip:{callbacks:{label:ctx=>` $${ctx.raw.toLocaleString()}`}} } }
+  });
+
+  // 負債卡
+  const debtHTML = (bank, debt, paid, cssClass) => {
+    const remaining = Math.max(0, debt.bill - debt.paid);
+    const monthlyInterest = Math.round(remaining * debt.rate / 100 / 12);
+    return `<div class="debt-card ${remaining===0?'ok':''}">
+      <div class="debt-header"><span class="debt-bank">${bank}信用卡</span><span class="debt-badge" style="background:${remaining>0?'#fef2f2':'#f0fdf4'};color:${remaining>0?'#ef4444':'#16a34a'}">${remaining>0?'有未繳餘額':'已繳清'}</span></div>
+      <div class="debt-grid">
+        <div class="debt-item"><div class="debt-item-label">本期帳單</div><div class="debt-item-val red">$${debt.bill.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">本期已繳</div><div class="debt-item-val green">$${debt.paid.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">尚餘應繳</div><div class="debt-item-val ${remaining>0?'red':'green'}">$${remaining.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">月息估算</div><div class="debt-item-val orange">$${monthlyInterest.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">累計已繳</div><div class="debt-item-val green">$${Math.round(paid).toLocaleString()}</div></div>
+      </div>
+    </div>`;
+  };
+
+  document.getElementById('debtCards').innerHTML =
+    debtHTML('台新', TAISHIN_DEBT, taishinPaid) +
+    (FAREAST_DEBT.bill > 0 ? debtHTML('遠東', FAREAST_DEBT, fareastPaid) : '');
+
+  // 近期繳款（最近10筆）
+  document.getElementById('homePayCount').textContent = allPay.length + ' 筆';
+  document.getElementById('homePayBody').innerHTML = allPay.slice(0,10).map(r=>`
+    <tr>
+      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.txDate}</td>
+      <td><span style="font-size:10px;padding:1px 6px;border-radius:3px;background:${r.bank==='台新'?'#eff6ff':'#f0fdf4'};color:${r.bank==='台新'?'#2563eb':'#16a34a'}">${r.bank}</span></td>
+      <td style="font-size:12px;color:var(--muted)">${r.summary}</td>
+      <td class="amt" style="font-family:'Space Mono',monospace;text-align:right;color:var(--green)">$${Math.round(r.amount).toLocaleString()}</td>
+    </tr>`).join('');
+}
+
+// ── Payment Tab ───────────────────────────────────────
+function renderPayment() {
+  const taishinPaid  = taishinPayData.reduce((s,r)=>s+r.amount,0);
+  const fareastPaid  = fareastPayData.reduce((s,r)=>s+r.amount,0);
+
+  const debtHTML = (bank, debt, paid) => {
+    const remaining = Math.max(0, debt.bill - debt.paid);
+    const monthlyInterest = Math.round(remaining * debt.rate / 100 / 12);
+    return `<div class="debt-card ${remaining===0?'ok':''}">
+      <div class="debt-header"><span class="debt-bank">${bank}信用卡</span></div>
+      <div class="debt-grid">
+        <div class="debt-item"><div class="debt-item-label">本期帳單</div><div class="debt-item-val red">$${debt.bill.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">尚餘應繳</div><div class="debt-item-val ${remaining>0?'red':'green'}">$${remaining.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">月息估算</div><div class="debt-item-val orange">$${monthlyInterest.toLocaleString()}</div></div>
+        <div class="debt-item"><div class="debt-item-label">累計已繳</div><div class="debt-item-val green">$${Math.round(paid).toLocaleString()}</div></div>
+      </div>
+    </div>`;
+  };
+
+  document.getElementById('paymentDebtCards').innerHTML =
+    debtHTML('台新', TAISHIN_DEBT, taishinPaid) +
+    (FAREAST_DEBT.bill > 0 ? debtHTML('遠東', FAREAST_DEBT, fareastPaid) : '');
+
+  const tSorted = [...taishinPayData].sort((a,b)=>b.txDate.localeCompare(a.txDate));
+  const fSorted = [...fareastPayData].sort((a,b)=>b.txDate.localeCompare(a.txDate));
+
+  document.getElementById('taishinPayCount').textContent = tSorted.length + ' 筆';
+  document.getElementById('taishinPayBody').innerHTML = tSorted.map(r=>`
+    <tr>
+      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px">${r.txDate}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.summary}</td>
+      <td class="amt">$${Math.round(r.amount).toLocaleString()}</td>
+    </tr>`).join('') + `<tr><td colspan="2" style="font-size:11px;color:var(--muted);padding-top:10px">累計合計</td><td class="amt" style="color:var(--green);padding-top:10px">$${Math.round(taishinPaid).toLocaleString()}</td></tr>`;
+
+  document.getElementById('fareastPayCount').textContent = fSorted.length + ' 筆';
+  document.getElementById('fareastPayBody').innerHTML = fSorted.map(r=>`
+    <tr>
+      <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px">${r.txDate}</td>
+      <td style="font-size:12px;color:var(--muted)">${r.summary}</td>
+      <td class="amt">$${Math.round(r.amount).toLocaleString()}</td>
+    </tr>`).join('') + `<tr><td colspan="2" style="font-size:11px;color:var(--muted);padding-top:10px">累計合計</td><td class="amt" style="color:var(--green);padding-top:10px">$${Math.round(fareastPaid).toLocaleString()}</td></tr>`;
 }
 
 // ── Overview ──────────────────────────────────────────
@@ -583,13 +835,11 @@ function renderMerchant() {
   const source = document.getElementById('merchantSource').value;
   const year   = document.getElementById('merchantYear').value;
   const q      = document.getElementById('merchantSearch').value.toLowerCase();
-
   let data = [];
   if (source==='all'||source==='invoice') data.push(...invoiceData);
   if (source==='all'||source==='taishin') data.push(...taishinData);
   if (year) data = data.filter(r=>r.year===year);
 
-  // Group by merchant/desc
   const byMerchant = {};
   data.forEach(r => {
     const key = r.source==='invoice' ? r.seller : r.desc;
@@ -617,7 +867,6 @@ function renderDetail() {
   const year   = document.getElementById('detailYear').value;
   const cat    = document.getElementById('detailCat').value;
   const q      = document.getElementById('detailSearch').value.toLowerCase();
-
   let data = [];
   if (source==='all'||source==='invoice') data.push(...invoiceData);
   if (source==='all'||source==='taishin') data.push(...taishinData);
@@ -650,18 +899,20 @@ function renderInsights() {
   const sub = Math.round(byCat['訂閱服務']||0);
   const mcCount = yd.filter(r=>(r.seller||r.desc||'').includes('和德昌')||(r.seller||r.desc||'').includes('麥當勞')).length;
   const parking = Math.round(byCat['交通停車']||0);
-
-  // Netflix monthly
   const netflixData = allData.filter(r=>(r.seller||r.desc||'').toLowerCase().includes('netflix'));
   const netflixTotal = Math.round(netflixData.reduce((s,r)=>s+r.amount,0));
   const netflixMonths = new Set(netflixData.map(r=>r.yearMonth)).size;
 
+  const taishinPaid = taishinPayData.reduce((s,r)=>s+r.amount,0);
+  const taishinRemaining = Math.max(0, TAISHIN_DEBT.bill - TAISHIN_DEBT.paid);
+  const monthsToPayOff = taishinRemaining > 0 ? Math.ceil(taishinRemaining / (taishinPaid / Math.max(taishinPayData.length,1))) : 0;
+
   const insights = [
     { icon:'💡', title:'最大支出類別', desc:`${latestYear}年「${topCat?.[0]}」佔最多，共 $${Math.round(topCat?.[1]||0).toLocaleString()}，佔總支出 ${((topCat?.[1]||0)/total*100).toFixed(0)}%。` },
+    { icon:'💳', title:'台新循環利息', desc:`目前未還餘額 $${taishinRemaining.toLocaleString()}，年利率 ${TAISHIN_DEBT.rate}%，每月利息約 $${Math.round(taishinRemaining*TAISHIN_DEBT.rate/100/12).toLocaleString()}。盡快還清可節省利息支出。` },
     { icon:'📱', title:'訂閱服務費用', desc:`${latestYear}年訂閱服務合計 $${sub.toLocaleString()}，建議定期清查是否有閒置訂閱。` },
     { icon:'🎬', title:'Netflix 消費', desc:`累計 Netflix 支出 $${netflixTotal.toLocaleString()}，共 ${netflixMonths} 個月，月均 $${netflixMonths?Math.round(netflixTotal/netflixMonths):0}。` },
     { icon:'🍔', title:'麥當勞消費', desc:`${latestYear}年麥當勞消費 ${mcCount} 次，建議辦理 App 會員賺點數回饋。` },
-    { icon:'🚗', title:'停車費用', desc:`${latestYear}年停車費共 $${parking.toLocaleString()}，若固定停同一停車場，建議評估月租方案。` },
     { icon:'📊', title:'資料總覽', desc:`目前涵蓋 ${years.join('、')} 年，發票 ${invoiceData.length} 筆 + 台新信用卡 ${taishinData.length} 筆，合計 ${allData.length} 筆。` },
   ];
 
