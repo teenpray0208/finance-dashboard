@@ -149,6 +149,9 @@ canvas{max-height:220px;}
         <button class="tab" onclick="showTab('pay-fubon',this)">💰 富邦繳款</button>
         <button class="tab" onclick="showTab('merchant',this)">🏪 商家追蹤</button>
         <button class="tab" onclick="showTab('detail',this)">🧾 消費明細</button>
+        <button class="tab" onclick="showTab('leak',this)">🔍 抓漏</button>
+        <button class="tab" onclick="showTab('fixed-summary',this)">🏠 固定支出總表</button>
+        <button class="tab" onclick="showTab('fixed-detail',this)">📋 固定支出明細</button>
         <button class="tab" onclick="showTab('insights',this)">💡 洞察</button>
       </div>
 
@@ -306,6 +309,64 @@ canvas{max-height:220px;}
         </div>
       </div>
 
+      <!-- 抓漏 -->
+      <div class="section" id="tab-leak">
+        <div class="kpi-row" id="leakKpi"></div>
+        <div class="card">
+          <div class="card-title"><span>🔴 單筆超過 $1,000 的消費</span><span class="badge" id="leakBigCount"></span></div>
+          <div class="filter-row">
+            <select class="sel" id="leakYear" onchange="renderLeak()"><option value="">全部年份</option></select>
+            <select class="sel" id="leakSource" onchange="renderLeak()">
+              <option value="all">全部來源</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option><option value="invoice">發票</option>
+            </select>
+          </div>
+          <table class="tbl"><thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th>來源</th><th style="text-align:right">金額</th></tr></thead><tbody id="leakBigBody"></tbody></table>
+        </div>
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-title"><span>📱 訂閱服務累計</span><span class="badge" id="leakSubTotal"></span></div>
+            <table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakSubBody"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>🛵 外送餐飲累計</span><span class="badge" id="leakDeliveryTotal"></span></div>
+            <table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakDeliveryBody"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="card-title"><span>🚗 停車費累計</span><span class="badge" id="leakParkTotal"></span></div>
+            <table class="tbl"><thead><tr><th>商家</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakParkBody"></tbody></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- 固定支出總表 -->
+      <div class="section" id="tab-fixed-summary">
+        <div id="fixedNoData" style="display:none;padding:40px;text-align:center;color:var(--muted);">尚無資料。請先在 Google Sheets「固定支出」工作表填入資料，並將 CSV URL 設定到 index.html 的 FIXED_EXPENSE_CSV_URL 常數。</div>
+        <div class="kpi-row" id="fixedSumKpi"></div>
+        <div class="grid-7-5">
+          <div class="card"><div class="card-title"><span>每月固定支出</span></div><canvas id="fixedMonthChart"></canvas></div>
+          <div class="card"><div class="card-title"><span>項目佔比</span></div><canvas id="fixedDonutChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span>各項目年度彙整</span></div>
+          <div id="fixedSumTable"></div>
+        </div>
+      </div>
+
+      <!-- 固定支出明細 -->
+      <div class="section" id="tab-fixed-detail">
+        <div class="card">
+          <div class="card-title"><span>固定支出明細</span><span class="badge" id="fixedDetailCount"></span></div>
+          <div class="filter-row">
+            <select class="sel" id="fixedDetailYear" onchange="renderFixedDetail()"><option value="">全部年份</option></select>
+            <select class="sel" id="fixedDetailItem" onchange="renderFixedDetail()"><option value="">全部項目</option></select>
+          </div>
+          <table class="tbl">
+            <thead><tr><th>年月</th><th>項目</th><th>繳款日期</th><th>繳款方式</th><th>備註</th><th style="text-align:right">金額</th></tr></thead>
+            <tbody id="fixedDetailBody"></tbody>
+          </table>
+        </div>
+      </div>
+
       <div class="section" id="tab-insights"><div class="insight-grid" id="insightGrid"></div></div>
     </div>
   </div>
@@ -315,9 +376,9 @@ canvas{max-height:220px;}
 const CLIENT_ID='300122945168-fa0n4ne40fjja2vnbvs4tg2ptadhqfrp.apps.googleusercontent.com';
 const SCOPES='https://www.googleapis.com/auth/drive.readonly';
 const INVOICE_FOLDER_NAME='01 發票資料';
-const TAISHIN_FOLDER_NAME='02 台新信用卡';
-const FAREAST_FOLDER_NAME='03 遠東信用卡';
-const FUBON_FOLDER_NAME='04 富邦信用卡';
+const TAISHIN_FOLDER_NAME='02 台新信用卡消費明細';
+const FAREAST_FOLDER_NAME='03 遠東信用卡消費明細';
+const FUBON_FOLDER_NAME='04 富邦信用卡消費明細';
 const TAISHIN_PAY_FOLDER_ID='1AeswiQB_-WwIjxkc4RTfe5el4NEHlshF';
 const FAREAST_PAY_FOLDER_ID='1na2oWLgE9RMTrkaK2vitWXBG3fb7f5ET';
 const FUBON_PAY_FOLDER_ID='1FRdblpqfIC7odEDrMOxfw52ycfp-2eXe';
@@ -325,9 +386,12 @@ const TAISHIN_DEBT={bill:88014,paid:0,rate:15,dueDate:'2026/04/10'};
 const FAREAST_DEBT={bill:60075,paid:25534,rate:14.99,dueDate:'2026/04/07'};
 const FUBON_DEBT={bill:92619,paid:8500,rate:15,dueDate:'2026/04/03'};
 
+const FIXED_EXPENSE_CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vS8MjxAi72k8ZNZqHphUTNXmgxMaChFtdxnDMGQ2ur0hYEDhJkrc9B3xDgL05ruhx5aHDjF7vwNLklR/pub?gid=235120877&single=true&output=csv';
+
 let tokenClient,accessToken=null;
 let invoiceData=[],taishinData=[],fareastCardData=[],fubonCardData=[];
 let taishinPayData=[],fareastPayData=[],fubonPayData=[];
+let fixedExpenseData=[];
 let charts={};
 
 function initGSI(){
@@ -359,6 +423,7 @@ async function loadData(){
     taishinPayData=await loadByID(TAISHIN_PAY_FOLDER_ID,parseTaishinPayCsv);
     fareastPayData=await loadByID(FAREAST_PAY_FOLDER_ID,parseFarEastPayCsv);
     fubonPayData=await loadByID(FUBON_PAY_FOLDER_ID,parseFubonPayCsv);
+    fixedExpenseData=FIXED_EXPENSE_CSV_URL?await loadFixedExpenseCsv(FIXED_EXPENSE_CSV_URL):[];
     const now=new Date();const pad=n=>String(n).padStart(2,'0');
     document.getElementById('updateTime').textContent=`${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
     renderAll();
@@ -498,13 +563,21 @@ function renderAll(){
   document.getElementById('fubonYear').innerHTML=fubonYears.length?fubonYears.map(y=>`<option value="${y}">${y}年</option>`).join(''):'<option>無資料</option>';
   document.getElementById('merchantYear').innerHTML='<option value="">全部年份</option>'+allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
   document.getElementById('allcardsYear').innerHTML='<option value="">全部年份</option>'+allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+  document.getElementById('leakYear').innerHTML='<option value="">全部年份</option>'+allYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+
+  // 固定支出年份/項目選單
+  const fixedYears=[...new Set(fixedExpenseData.map(r=>r.year))].sort().reverse();
+  const fixedItems=[...new Set(fixedExpenseData.map(r=>r.item))].sort();
+  document.getElementById('fixedDetailYear').innerHTML='<option value="">全部年份</option>'+fixedYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+  document.getElementById('fixedDetailItem').innerHTML='<option value="">全部項目</option>'+fixedItems.map(i=>`<option value="${i}">${i}</option>`).join('');
   const allCardData=[...taishinData,...fareastCardData,...fubonCardData];
   const cats=[...new Set([...invoiceData,...allCardData].map(r=>r.category))].sort();
   ['detailCat','taishinCat','fareastCat','fubonCat','allcardsCat'].forEach(id=>{const s=document.getElementById(id);if(!s)return;const cur=s.value;s.innerHTML='<option value="">全部分類</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');if(cur)s.value=cur;});
   renderHome();renderOverview();renderCompare();
   renderTaishin();renderFarEast();renderFubon();renderAllCards();
   renderPayAll();renderPayTaishin();renderPayFarEast();renderPayFubon();
-  renderMerchant();renderDetail();renderInsights();
+  renderMerchant();renderDetail();renderLeak();
+  renderFixedSummary();renderFixedDetail();renderInsights();
 }
 
 // ── Home ──────────────────────────────────────────────
@@ -514,7 +587,8 @@ function renderHome(){
   const totalTaishin=taishinData.filter(r=>r.year===yr).reduce((s,r)=>s+r.amount,0);
   const totalFareast=fareastCardData.filter(r=>r.year===yr).reduce((s,r)=>s+r.amount,0);
   const totalFubon=fubonCardData.filter(r=>r.year===yr).reduce((s,r)=>s+r.amount,0);
-  const totalThisYear=totalInvoice+totalTaishin+totalFareast+totalFubon;
+  const totalFixed=fixedExpenseData.filter(r=>r.year===yr).reduce((s,r)=>s+r.amount,0);
+  const totalThisYear=totalInvoice+totalTaishin+totalFareast+totalFubon+totalFixed;
   const taishinPaid=taishinPayData.reduce((s,r)=>s+r.amount,0);
   const fareastPaid=fareastPayData.reduce((s,r)=>s+r.amount,0);
   const fubonPaid=fubonPayData.reduce((s,r)=>s+r.amount,0);
@@ -525,6 +599,7 @@ function renderHome(){
         <div style="background:var(--surface2);border-radius:5px;padding:3px 7px;font-size:10px;"><span style="color:var(--muted)">台新</span><br><span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--purple)">$${Math.round(totalTaishin).toLocaleString()}</span></div>
         <div style="background:var(--surface2);border-radius:5px;padding:3px 7px;font-size:10px;"><span style="color:var(--muted)">遠東</span><br><span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green)">$${Math.round(totalFareast).toLocaleString()}</span></div>
         <div style="background:var(--surface2);border-radius:5px;padding:3px 7px;font-size:10px;"><span style="color:var(--muted)">富邦</span><br><span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--orange)">$${Math.round(totalFubon).toLocaleString()}</span></div>
+        <div style="background:var(--surface2);border-radius:5px;padding:3px 7px;font-size:10px;"><span style="color:var(--muted)">固定支出</span><br><span style="font-family:'Space Mono',monospace;font-weight:700;color:var(--teal)">$${Math.round(totalFixed).toLocaleString()}</span></div>
       </div>
     </div>
     <div class="kpi"><div class="kpi-label">台新累計已繳</div><div class="kpi-val green">$${Math.round(taishinPaid).toLocaleString()}</div><div class="kpi-sub">未還 $${Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid).toLocaleString()} ／ 截止 ${TAISHIN_DEBT.dueDate}</div></div>
@@ -696,7 +771,138 @@ function renderDetail(){
   document.getElementById('detailBody').innerHTML=data.slice(0,300).map(r=>`<tr><td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.date.slice(5)}</td><td>${r.display||r.desc||r.seller}</td><td><span class="tag" style="background:${cc(r.category)}22;color:${cc(r.category)}">${r.category}</span></td><td style="font-size:11px;color:var(--muted)">${srcLabel[r.source]||r.source}</td><td class="amt out">$${Math.round(r.amount).toLocaleString()}</td></tr>`).join('');
 }
 
-// ── Insights ──────────────────────────────────────────
+// ── 固定支出 CSV 解析 ─────────────────────────────────
+async function loadFixedExpenseCsv(url){
+  try{
+    const res=await fetch(url);
+    const text=await res.text();
+    const lines=text.split('\n');const rows=[];
+    for(let i=1;i<lines.length;i++){
+      const line=lines[i].trim();if(!line)continue;
+      const cols=splitCsv(line);if(cols.length<3)continue;
+      const ym=cols[0]?cols[0].trim():'';
+      const item=cols[1]?cols[1].trim():'';
+      const amt=parseFloat(cols[2]?cols[2].trim().replace(/,/g,''):'');
+      const payDate=cols[3]?cols[3].trim():'';
+      const payMethod=cols[4]?cols[4].trim():'';
+      const note=cols[5]?cols[5].trim():'';
+      if(!ym||!item||isNaN(amt)||amt<=0)continue;
+      rows.push({yearMonth:ym,year:ym.slice(0,4),item,amount:amt,payDate,payMethod,note});
+    }
+    return rows;
+  }catch(e){console.error('固定支出讀取失敗',e);return[];}
+}
+
+// ── 抓漏 ─────────────────────────────────────────────
+function renderLeak(){
+  const year=document.getElementById('leakYear').value;
+  const source=document.getElementById('leakSource').value;
+  const srcLabel={invoice:'發票',taishin:'台新',fareast:'遠東',fubon:'富邦'};
+
+  let allData=[];
+  if(source==='all'||source==='invoice')allData.push(...invoiceData);
+  if(source==='all'||source==='taishin')allData.push(...taishinData);
+  if(source==='all'||source==='fareast')allData.push(...fareastCardData);
+  if(source==='all'||source==='fubon')allData.push(...fubonCardData);
+  if(year)allData=allData.filter(r=>r.year===year);
+
+  // 大額消費
+  const bigSpend=allData.filter(r=>r.amount>=1000).sort((a,b)=>b.amount-a.amount);
+  const bigTotal=bigSpend.reduce((s,r)=>s+r.amount,0);
+
+  document.getElementById('leakKpi').innerHTML=`
+    <div class="kpi"><div class="kpi-label">大額消費筆數</div><div class="kpi-val red">${bigSpend.length} 筆</div><div class="kpi-sub">單筆 ≥ $1,000</div></div>
+    <div class="kpi"><div class="kpi-label">大額消費合計</div><div class="kpi-val red">$${Math.round(bigTotal).toLocaleString()}</div></div>
+    <div class="kpi"><div class="kpi-label">訂閱服務累計</div><div class="kpi-val purple">$${Math.round(allData.filter(r=>r.category==='訂閱服務').reduce((s,r)=>s+r.amount,0)).toLocaleString()}</div></div>
+    <div class="kpi"><div class="kpi-label">外送餐飲累計</div><div class="kpi-val orange">$${Math.round(allData.filter(r=>r.category==='外送餐飲').reduce((s,r)=>s+r.amount,0)).toLocaleString()}</div></div>`;
+
+  document.getElementById('leakBigCount').textContent=bigSpend.length+' 筆';
+  document.getElementById('leakBigBody').innerHTML=bigSpend.slice(0,200).map(r=>`<tr>
+    <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.date.slice(5)}</td>
+    <td>${r.display||r.desc||r.seller}</td>
+    <td><span class="tag" style="background:${cc(r.category)}22;color:${cc(r.category)}">${r.category}</span></td>
+    <td style="font-size:11px;color:var(--muted)">${srcLabel[r.source]||r.source}</td>
+    <td class="amt out" style="font-weight:${r.amount>=5000?'700':'400'}">$${Math.round(r.amount).toLocaleString()}</td>
+  </tr>`).join('');
+
+  // 訂閱明細
+  const subData=allData.filter(r=>r.category==='訂閱服務');
+  const subByName={};subData.forEach(r=>{const k=r.desc||r.display||r.seller;if(!subByName[k])subByName[k]={total:0,count:0};subByName[k].total+=r.amount;subByName[k].count++;});
+  const subSorted=Object.entries(subByName).sort((a,b)=>b[1].total-a[1].total);
+  const subTotal=subData.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('leakSubTotal').textContent='$'+Math.round(subTotal).toLocaleString();
+  document.getElementById('leakSubBody').innerHTML=subSorted.map(([name,d])=>`<tr><td>${name}</td><td style="color:var(--muted)">${d.count}</td><td class="amt out">$${Math.round(d.total).toLocaleString()}</td></tr>`).join('');
+
+  // 外送明細
+  const delData=allData.filter(r=>r.category==='外送餐飲');
+  const delByName={};delData.forEach(r=>{const k=r.desc||r.display||r.seller;if(!delByName[k])delByName[k]={total:0,count:0};delByName[k].total+=r.amount;delByName[k].count++;});
+  const delSorted=Object.entries(delByName).sort((a,b)=>b[1].total-a[1].total);
+  const delTotal=delData.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('leakDeliveryTotal').textContent='$'+Math.round(delTotal).toLocaleString();
+  document.getElementById('leakDeliveryBody').innerHTML=delSorted.map(([name,d])=>`<tr><td>${name}</td><td style="color:var(--muted)">${d.count}</td><td class="amt out">$${Math.round(d.total).toLocaleString()}</td></tr>`).join('');
+
+  // 停車費明細
+  const parkData=allData.filter(r=>r.category==='交通停車');
+  const parkByName={};parkData.forEach(r=>{const k=r.seller||r.desc||r.display;if(!parkByName[k])parkByName[k]={total:0,count:0};parkByName[k].total+=r.amount;parkByName[k].count++;});
+  const parkSorted=Object.entries(parkByName).sort((a,b)=>b[1].total-a[1].total);
+  const parkTotal=parkData.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('leakParkTotal').textContent='$'+Math.round(parkTotal).toLocaleString();
+  document.getElementById('leakParkBody').innerHTML=parkSorted.map(([name,d])=>`<tr><td>${name}</td><td style="color:var(--muted)">${d.count}</td><td class="amt out">$${Math.round(d.total).toLocaleString()}</td></tr>`).join('');
+}
+
+// ── 固定支出總表 ──────────────────────────────────────
+function renderFixedSummary(){
+  if(!fixedExpenseData.length){
+    document.getElementById('fixedNoData').style.display='block';
+    document.getElementById('fixedSumKpi').innerHTML='';
+    return;
+  }
+  document.getElementById('fixedNoData').style.display='none';
+  const total=fixedExpenseData.reduce((s,r)=>s+r.amount,0);
+  const years=[...new Set(fixedExpenseData.map(r=>r.year))].sort().reverse();
+  const items=[...new Set(fixedExpenseData.map(r=>r.item))].sort();
+  const byItem={};fixedExpenseData.forEach(r=>{byItem[r.item]=(byItem[r.item]||0)+r.amount;});
+  const sortedItems=Object.entries(byItem).sort((a,b)=>b[1]-a[1]);
+
+  document.getElementById('fixedSumKpi').innerHTML=`
+    <div class="kpi"><div class="kpi-label">固定支出累計</div><div class="kpi-val red">$${Math.round(total).toLocaleString()}</div></div>
+    <div class="kpi"><div class="kpi-label">月均固定支出</div><div class="kpi-val blue">$${Math.round(total/Math.max(new Set(fixedExpenseData.map(r=>r.yearMonth)).size,1)).toLocaleString()}</div></div>
+    ${sortedItems.slice(0,2).map(([item,amt])=>`<div class="kpi"><div class="kpi-label">${item}累計</div><div class="kpi-val orange">$${Math.round(amt).toLocaleString()}</div></div>`).join('')}`;
+
+  const months=[...new Set(fixedExpenseData.map(r=>r.yearMonth))].sort();
+  const byMonth={};months.forEach(m=>byMonth[m]=0);
+  fixedExpenseData.forEach(r=>{byMonth[r.yearMonth]=(byMonth[r.yearMonth]||0)+r.amount;});
+  destroyChart('fixedMonthChart');
+  charts.fixedMonthChart=new Chart(document.getElementById('fixedMonthChart').getContext('2d'),{type:'bar',data:{labels:months.map(m=>m.slice(5)+'月'),datasets:[{data:months.map(m=>byMonth[m]),backgroundColor:'#2563eb88',borderColor:'#2563eb',borderWidth:1,borderRadius:5}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#64748b',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#64748b',font:{size:11},callback:v=>'$'+v.toLocaleString()},grid:{color:'#f1f5f9'}}}}});
+
+  destroyChart('fixedDonutChart');
+  charts.fixedDonutChart=new Chart(document.getElementById('fixedDonutChart').getContext('2d'),{type:'doughnut',data:{labels:sortedItems.map(c=>c[0]),datasets:[{data:sortedItems.map(c=>Math.round(c[1])),backgroundColor:sortedItems.map((_,i)=>['#2563eb','#ef4444','#16a34a','#7c3aed','#ea580c','#0891b2','#f97316'][i%7]+'cc'),borderWidth:1}]},options:{responsive:true,cutout:'65%',plugins:{legend:{labels:{color:'#64748b',font:{size:10},boxWidth:9}},tooltip:{callbacks:{label:ctx=>` $${ctx.raw.toLocaleString()}`}}}}});
+
+  // 各項目年度彙整表
+  const itemColors=['#2563eb','#ef4444','#16a34a','#7c3aed','#ea580c','#0891b2','#f97316'];
+  document.getElementById('fixedSumTable').innerHTML=`<table class="tbl"><thead><tr><th>項目</th>${years.map(y=>`<th style="text-align:right">${y}年</th>`).join('')}<th style="text-align:right">累計</th></tr></thead><tbody>${items.map((item,idx)=>{const byYear={};years.forEach(y=>byYear[y]=0);fixedExpenseData.filter(r=>r.item===item).forEach(r=>byYear[r.year]=(byYear[r.year]||0)+r.amount);const cumTotal=Object.values(byYear).reduce((s,v)=>s+v,0);return`<tr><td><span style="color:${itemColors[idx%7]};font-weight:500">${item}</span></td>${years.map(y=>`<td class="amt" style="color:var(--text)">$${Math.round(byYear[y]).toLocaleString()}</td>`).join('')}<td class="amt out">$${Math.round(cumTotal).toLocaleString()}</td></tr>`}).join('')}</tbody></table>`;
+}
+
+// ── 固定支出明細 ──────────────────────────────────────
+function renderFixedDetail(){
+  const year=document.getElementById('fixedDetailYear').value;
+  const item=document.getElementById('fixedDetailItem').value;
+  let data=[...fixedExpenseData];
+  if(year)data=data.filter(r=>r.year===year);
+  if(item)data=data.filter(r=>r.item===item);
+  data=data.sort((a,b)=>b.yearMonth.localeCompare(a.yearMonth));
+  document.getElementById('fixedDetailCount').textContent=data.length+' 筆';
+  document.getElementById('fixedDetailBody').innerHTML=data.map(r=>`<tr>
+    <td style="font-family:'Space Mono',monospace;font-size:11px">${r.yearMonth}</td>
+    <td>${r.item}</td>
+    <td style="color:var(--muted);font-size:11px">${r.payDate||'—'}</td>
+    <td style="color:var(--muted);font-size:11px">${r.payMethod||'—'}</td>
+    <td style="color:var(--muted);font-size:11px">${r.note||'—'}</td>
+    <td class="amt out">$${Math.round(r.amount).toLocaleString()}</td>
+  </tr>`).join('');
+}
+
+
 function renderInsights(){
   const allData=[...invoiceData,...taishinData,...fareastCardData,...fubonCardData];
   const years=[...new Set(allData.map(r=>r.year))].sort().reverse();
