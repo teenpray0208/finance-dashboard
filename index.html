@@ -414,6 +414,44 @@ canvas{max-height:220px;}
       <!-- SOP -->
       <div class="section" id="tab-sop">
         <div class="card">
+          <div class="card-title" style="font-size:15px;">🏗️ 系統架構總覽</div>
+          <table class="tbl">
+            <thead><tr><th style="width:60px">STEP</th><th style="width:160px">名稱</th><th>說明</th><th style="width:220px">網址</th></tr></thead>
+            <tbody>
+              <tr>
+                <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent)">STEP 1</td>
+                <td style="font-weight:500">財務儀表板 raw data<br><span style="font-size:10px;color:var(--muted)">Google 雲端硬碟</span></td>
+                <td style="font-size:12px">所有原始資料的儲存位置。發票載具 CSV、三張信用卡帳單 CSV、繳款明細 CSV 都放在這裡的各子資料夾，是整個系統的資料來源。</td>
+                <td style="font-size:11px"><a href="https://drive.google.com/drive/folders/1XZ2cFSCmTn8cQUZCcqQkQtJMjzj1C-Wg" target="_blank" style="color:var(--accent)">Google Drive 財務儀表板 raw data</a></td>
+              </tr>
+              <tr>
+                <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent)">STEP 2</td>
+                <td style="font-weight:500">個人財務儀表板<br><span style="font-size:10px;color:var(--muted)">Google Sheets 前台資料區</span></td>
+                <td style="font-size:12px">Apps Script 讀取 Drive 的 CSV 後，將資料整理寫入各工作表（台新信用卡、發票明細、每月摘要、分類統計、固定支出）。也是固定支出手動填入的地方。</td>
+                <td style="font-size:11px"><a href="https://docs.google.com/spreadsheets/d/15E0cGlRGqdsg-T1CYRxqKHRCsd0W7GELPTgyd7Y-a00/" target="_blank" style="color:var(--accent)">個人財務儀表板 Google Sheets</a></td>
+              </tr>
+              <tr>
+                <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent)">STEP 3</td>
+                <td style="font-weight:500">Apps Script 後台原始碼<br><span style="font-size:10px;color:var(--muted)">Looker Studio 專案編輯器</span></td>
+                <td style="font-size:12px">Google Apps Script v7，負責自動讀取 Drive CSV 並寫入 Sheets。每月5日凌晨2點自動執行 importAll()。如需手動觸發，點 Sheets 選單「💰 財務儀表板 → 立即更新所有資料」。</td>
+                <td style="font-size:11px"><a href="https://script.google.com/home/projects/1PruZ-tMB_KcLKxqrFiSzHbV3BqBvRXBiEmpE6SFNqkLHqf3wBJbkNI9S/edit" target="_blank" style="color:var(--accent)">Apps Script 編輯器</a></td>
+              </tr>
+              <tr>
+                <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent)">STEP 4</td>
+                <td style="font-weight:500">dashboard GitHub 後台<br><span style="font-size:10px;color:var(--muted)">teenpray0208/finance-dashboard</span></td>
+                <td style="font-size:12px">儀表板的 index.html 存放在這個 GitHub repo，每次修改 code 後上傳到這裡，GitHub Pages 會自動部署到網頁。每月更新負債數字後也需上傳新的 index.html。</td>
+                <td style="font-size:11px"><a href="https://github.com/teenpray0208/finance-dashboard" target="_blank" style="color:var(--accent)">github.com/teenpray0208/finance-dashboard</a></td>
+              </tr>
+              <tr>
+                <td style="font-family:'Space Mono',monospace;font-weight:700;color:var(--accent)">STEP 5</td>
+                <td style="font-weight:500">結果頁面<br><span style="font-size:10px;color:var(--muted)">個人財務儀表板 GitHub Pages 網頁</span></td>
+                <td style="font-size:12px">最終使用的儀表板網頁，用 Google 帳號登入後自動從 Drive 讀取最新資料。如顯示舊資料按 Ctrl+Shift+R 強制重新整理，或點右上角「🔄 更新資料」。</td>
+                <td style="font-size:11px"><a href="https://teenpray0208.github.io/finance-dashboard/" target="_blank" style="color:var(--accent)">teenpray0208.github.io/finance-dashboard</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:14px;">
           <div class="card-title" style="font-size:15px;">📋 Part 1 — 資料更新 SOP</div>
           <div style="line-height:2;font-size:13px;">
             <p style="font-weight:500;margin-bottom:8px;color:var(--accent)">每月固定流程（帳單結帳後執行）</p>
