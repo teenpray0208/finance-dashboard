@@ -29,10 +29,19 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .main{padding:20px;max-width:1400px;margin:0 auto;}
-.tabs{display:flex;gap:4px;margin-bottom:0;background:var(--surface2);padding:4px;border-radius:10px;width:100%;flex-wrap:wrap;position:sticky;top:57px;z-index:99;box-shadow:0 2px 4px rgba(0,0,0,.06);}
-.tabs-wrap{position:sticky;top:57px;z-index:99;background:var(--bg);padding:12px 20px 8px;margin:0 -20px;}
-.tab{background:none;border:none;padding:7px 16px;border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:all .2s;white-space:nowrap;}
-.tab.active{background:#fff;color:var(--accent);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+/* 舊 tabs 保留相容性 */
+.tabs{display:none;}
+.tabs-wrap{display:none;}
+.tab{display:none;}
+/* 左側導覽 */
+.app-body{display:flex;height:calc(100vh - 57px);overflow:hidden;}
+.sidenav{width:192px;min-width:192px;background:#fff;border-right:1px solid var(--border);overflow-y:auto;padding:12px 0;flex-shrink:0;position:sticky;top:57px;height:calc(100vh - 57px);}
+.nav-group{margin-bottom:4px;}
+.nav-group-label{font-size:9px;color:var(--muted2);letter-spacing:1.5px;text-transform:uppercase;padding:10px 16px 4px;font-weight:500;}
+.nav-item{display:block;width:100%;text-align:left;background:none;border:none;padding:6px 16px;font-family:'Noto Sans TC',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid transparent;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:var(--accent-l);color:var(--accent);font-weight:500;border-left-color:var(--accent);}
+.main-content{flex:1;overflow-y:auto;padding:20px;height:calc(100vh - 57px);}
 .section{display:none;}.section.active{display:block;}
 .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
 .kpi{background:#fff;border:1px solid var(--border);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
@@ -133,36 +142,80 @@ canvas{max-height:220px;}
       <button class="btn-logout" onclick="signOut()">登出</button>
     </div>
   </header>
-  <div class="main">
-    <div id="loading" style="display:none"><div class="spinner"></div><p>正在讀取資料...</p></div>
-    <div id="dashboard" style="display:none">
-      <div class="tabs-wrap">
-      <div class="tabs">
-        <button class="tab active" onclick="showTab('home',this)">🏠 財務總表</button>
-        <button class="tab" onclick="showTab('overview',this)">📊 發票總覽</button>
-        <button class="tab" onclick="showTab('compare',this)">📅 跨年比較</button>
-        <button class="tab" onclick="showTab('allcards',this)">🔀 三卡消費明細</button>
-        <button class="tab" onclick="showTab('taishin',this)">💳 台新信用卡</button>
-        <button class="tab" onclick="showTab('fareast',this)">🏦 遠東信用卡</button>
-        <button class="tab" onclick="showTab('fubon',this)">🟡 富邦信用卡</button>
-        <button class="tab" onclick="showTab('pay-all',this)">💳 三卡繳款</button>
-        <button class="tab" onclick="showTab('pay-taishin',this)">💰 台新繳款</button>
-        <button class="tab" onclick="showTab('pay-fareast',this)">💰 遠東繳款</button>
-        <button class="tab" onclick="showTab('pay-fubon',this)">💰 富邦繳款</button>
-        <button class="tab" onclick="showTab('merchant',this)">🏪 商家追蹤</button>
-        <button class="tab" onclick="showTab('detail',this)">🧾 消費明細</button>
-        <button class="tab" onclick="showTab('leak',this)">🔍 抓漏</button>
-        <button class="tab" onclick="showTab('fixed-summary',this)">🏠 固定支出總表</button>
-        <button class="tab" onclick="showTab('fixed-detail',this)">📋 固定支出明細</button>
-        <button class="tab" onclick="showTab('insights',this)">💡 洞察</button>
+  <div class="app-body">
+    <!-- 左側導覽 -->
+    <nav class="sidenav" id="sidenav">
+      <div class="nav-group">
+        <div class="nav-group-label">總覽</div>
+        <button class="nav-item active" onclick="showTab('home',this)" data-id="home">01 財務總表</button>
+        <button class="nav-item" onclick="showTab('insights',this)" data-id="insights">02 洞察</button>
+        <button class="nav-item" onclick="showTab('goals',this)" data-id="goals">03 目標</button>
       </div>
+      <div class="nav-group">
+        <div class="nav-group-label">消費記錄</div>
+        <button class="nav-item" onclick="showTab('overview',this)" data-id="overview">04 發票總覽</button>
+        <button class="nav-item" onclick="showTab('compare',this)" data-id="compare">05 跨年比較</button>
+        <button class="nav-item" onclick="showTab('allcards',this)" data-id="allcards">06 三卡消費明細</button>
+        <button class="nav-item" onclick="showTab('taishin',this)" data-id="taishin">07 台新信用卡</button>
+        <button class="nav-item" onclick="showTab('fareast',this)" data-id="fareast">08 遠東信用卡</button>
+        <button class="nav-item" onclick="showTab('fubon',this)" data-id="fubon">09 富邦信用卡</button>
+        <button class="nav-item" onclick="showTab('detail',this)" data-id="detail">10 全部消費明細</button>
+        <button class="nav-item" onclick="showTab('merchant',this)" data-id="merchant">11 商家追蹤</button>
       </div>
-      <div style="height:12px"></div>
+      <div class="nav-group">
+        <div class="nav-group-label">繳款記錄</div>
+        <button class="nav-item" onclick="showTab('pay-all',this)" data-id="pay-all">12 三卡繳款</button>
+        <button class="nav-item" onclick="showTab('pay-taishin',this)" data-id="pay-taishin">13 台新繳款</button>
+        <button class="nav-item" onclick="showTab('pay-fareast',this)" data-id="pay-fareast">14 遠東繳款</button>
+        <button class="nav-item" onclick="showTab('pay-fubon',this)" data-id="pay-fubon">15 富邦繳款</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">固定支出</div>
+        <button class="nav-item" onclick="showTab('fixed-summary',this)" data-id="fixed-summary">16 固定支出總表</button>
+        <button class="nav-item" onclick="showTab('fixed-detail',this)" data-id="fixed-detail">17 固定支出明細</button>
+      </div>
+      <div class="nav-group">
+        <div class="nav-group-label">工具</div>
+        <button class="nav-item" onclick="showTab('leak',this)" data-id="leak">18 抓漏</button>
+        <button class="nav-item" onclick="showTab('sop',this)" data-id="sop">19 資料 SOP</button>
+        <button class="nav-item" onclick="showTab('todo',this)" data-id="todo">20 待辦事項</button>
+        <button class="nav-item" onclick="showTab('devlog',this)" data-id="devlog">21 開發進度</button>
+      </div>
+    </nav>
+
+    <!-- 主內容 -->
+    <div class="main-content">
+      <div id="loading" style="display:none"><div class="spinner"></div><p>正在讀取資料...</p></div>
+      <div id="dashboard" style="display:none">
 
       <div class="section active" id="tab-home">
         <div class="kpi-row" id="homeKpi"></div>
         <div class="card-title" style="margin-bottom:10px;font-size:14px;font-weight:500;">💳 信用卡負債狀況</div>
         <div id="debtCards"></div>
+      </div>
+
+      <div class="section" id="tab-insights"><div class="insight-grid" id="insightGrid"></div></div>
+
+      <!-- 目標 -->
+      <div class="section" id="tab-goals">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="font-size:15px;">💰 財富里程碑</div>
+            <div id="goalsMilestone"></div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="font-size:15px;">✨ 億萬富翁銘言</div>
+            <div id="goalsQuotes"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="font-size:15px;">🎯 針對你目前財務狀況的建議</div>
+          <div id="goalsAdvice"></div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="font-size:15px;">👏 每個月值得讚許的地方</div>
+          <div id="goalsPraise"></div>
+        </div>
       </div>
 
       <div class="section" id="tab-overview">
@@ -181,6 +234,22 @@ canvas{max-height:220px;}
       <div class="section" id="tab-compare">
         <div class="card"><div class="card-title"><span>跨年月份消費比較</span></div><canvas id="compareChart" style="max-height:280px"></canvas></div>
         <div class="compare-wrap" id="compareWrap"></div>
+      </div>
+
+      <div class="section" id="tab-allcards">
+        <div class="card">
+          <div class="card-title"><span>三卡消費明細</span><span class="badge" id="allcardsCount"></span></div>
+          <div class="filter-row">
+            <select class="sel" id="allcardsYear" onchange="renderAllCards()"><option value="">全部年份</option></select>
+            <select class="sel" id="allcardsCat" onchange="renderAllCards()"><option value="">全部分類</option></select>
+            <select class="sel" id="allcardsCard" onchange="renderAllCards()">
+              <option value="">全部信用卡</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
+            </select>
+          </div>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="allcardsSearch" placeholder="搜尋消費明細..." oninput="renderAllCards()"></div>
+          <div id="allcardsTotal" style="display:none" class="search-total"><span class="search-total-label">篩選結果合計</span><span class="search-total-val" id="allcardsTotalVal">$0</span></div>
+          <table class="tbl"><thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th>信用卡</th><th style="text-align:right">金額</th></tr></thead><tbody id="allcardsBody"></tbody></table>
+        </div>
       </div>
 
       <div class="section" id="tab-taishin">
@@ -225,20 +294,34 @@ canvas{max-height:220px;}
         </div>
       </div>
 
-      <div class="section" id="tab-allcards">
+      <div class="section" id="tab-detail">
         <div class="card">
-          <div class="card-title"><span>三卡消費明細</span><span class="badge" id="allcardsCount"></span></div>
+          <div class="card-title"><span>全部消費明細</span><span class="badge" id="detailCount"></span></div>
           <div class="filter-row">
-            <select class="sel" id="allcardsYear" onchange="renderAllCards()"><option value="">全部年份</option></select>
-            <select class="sel" id="allcardsCat" onchange="renderAllCards()"><option value="">全部分類</option></select>
-            <select class="sel" id="allcardsCard" onchange="renderAllCards()">
-              <option value="">全部信用卡</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
+            <select class="sel" id="detailSource" onchange="renderDetail()">
+              <option value="all">全部來源</option><option value="invoice">發票載具</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
             </select>
+            <select class="sel" id="detailYear" onchange="renderDetail()"></select>
+            <select class="sel" id="detailCat" onchange="renderDetail()"><option value="">全部分類</option></select>
           </div>
-          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="allcardsSearch" placeholder="搜尋消費明細..." oninput="renderAllCards()"></div>
-          <div id="allcardsTotal" style="display:none" class="search-total"><span class="search-total-label">篩選結果合計</span><span class="search-total-val" id="allcardsTotalVal">$0</span></div>
-          <table class="tbl"><thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th>信用卡</th><th style="text-align:right">金額</th></tr></thead><tbody id="allcardsBody"></tbody></table>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="detailSearch" placeholder="搜尋..." oninput="renderDetail()"></div>
+          <table class="tbl"><thead><tr><th>日期</th><th>商家 / 消費明細</th><th>分類</th><th>來源</th><th style="text-align:right">金額</th></tr></thead><tbody id="detailBody"></tbody></table>
         </div>
+      </div>
+
+      <div class="section" id="tab-merchant">
+        <div class="filter-row">
+          <label style="font-size:12px;color:var(--muted)">資料來源：</label>
+          <select class="sel" id="merchantSource" onchange="renderMerchant()">
+            <option value="all">全部</option><option value="invoice">發票載具</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
+          </select>
+          <select class="sel" id="merchantYear" onchange="renderMerchant()"><option value="">全部年份</option></select>
+          <select class="sel" id="merchantSort" onchange="renderMerchant()">
+            <option value="total">依金額排序</option><option value="count">依筆數排序</option><option value="months">依月數排序</option><option value="name">依名稱排序</option>
+          </select>
+          <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:200px"><span class="search-icon">🔍</span><input class="search-input" id="merchantSearch" placeholder="搜尋商家..." oninput="renderMerchant()"></div>
+        </div>
+        <div class="merchant-grid" id="merchantGrid"></div>
       </div>
 
       <div class="section" id="tab-pay-all">
@@ -260,7 +343,6 @@ canvas{max-height:220px;}
             <table class="pay-tbl"><thead><tr><th>日期</th><th>摘要</th><th style="text-align:right">金額</th></tr></thead><tbody id="payAllFubonBody"></tbody></table>
           </div>
         </div>
-        <!-- 三卡繳費總明細 -->
         <div class="card">
           <div class="card-title"><span>三卡繳費總明細</span><span class="badge" id="payAllTotalCount"></span></div>
           <div id="payAllTotalAmt" style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green);font-size:15px;margin-bottom:10px;"></div>
@@ -289,40 +371,27 @@ canvas{max-height:220px;}
         </div>
       </div>
 
-      <div class="section" id="tab-merchant">
-        <div class="filter-row">
-          <label style="font-size:12px;color:var(--muted)">資料來源：</label>
-          <select class="sel" id="merchantSource" onchange="renderMerchant()">
-            <option value="all">全部</option><option value="invoice">發票載具</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
-          </select>
-          <select class="sel" id="merchantYear" onchange="renderMerchant()"><option value="">全部年份</option></select>
-          <select class="sel" id="merchantSort" onchange="renderMerchant()">
-            <option value="total">依金額排序</option>
-            <option value="count">依筆數排序</option>
-            <option value="months">依月數排序</option>
-            <option value="name">依名稱排序</option>
-          </select>
-          <div class="search-wrap" style="margin-bottom:0;flex:1;min-width:200px"><span class="search-icon">🔍</span><input class="search-input" id="merchantSearch" placeholder="搜尋商家..." oninput="renderMerchant()"></div>
+      <div class="section" id="tab-fixed-summary">
+        <div id="fixedNoData" style="display:none;padding:40px;text-align:center;color:var(--muted);">尚無資料。請先在 Google Sheets「固定支出」工作表填入資料。</div>
+        <div class="kpi-row" id="fixedSumKpi"></div>
+        <div class="grid-7-5">
+          <div class="card"><div class="card-title"><span>每月固定支出</span></div><canvas id="fixedMonthChart"></canvas></div>
+          <div class="card"><div class="card-title"><span>項目佔比</span></div><canvas id="fixedDonutChart"></canvas></div>
         </div>
-        <div class="merchant-grid" id="merchantGrid"></div>
+        <div class="card"><div class="card-title"><span>各項目年度彙整</span></div><div id="fixedSumTable"></div></div>
       </div>
 
-      <div class="section" id="tab-detail">
+      <div class="section" id="tab-fixed-detail">
         <div class="card">
-          <div class="card-title"><span>全部消費明細</span><span class="badge" id="detailCount"></span></div>
+          <div class="card-title"><span>固定支出明細</span><span class="badge" id="fixedDetailCount"></span></div>
           <div class="filter-row">
-            <select class="sel" id="detailSource" onchange="renderDetail()">
-              <option value="all">全部來源</option><option value="invoice">發票載具</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
-            </select>
-            <select class="sel" id="detailYear" onchange="renderDetail()"></select>
-            <select class="sel" id="detailCat" onchange="renderDetail()"><option value="">全部分類</option></select>
+            <select class="sel" id="fixedDetailYear" onchange="renderFixedDetail()"><option value="">全部年份</option></select>
+            <select class="sel" id="fixedDetailItem" onchange="renderFixedDetail()"><option value="">全部項目</option></select>
           </div>
-          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="detailSearch" placeholder="搜尋..." oninput="renderDetail()"></div>
-          <table class="tbl"><thead><tr><th>日期</th><th>商家 / 消費明細</th><th>分類</th><th>來源</th><th style="text-align:right">金額</th></tr></thead><tbody id="detailBody"></tbody></table>
+          <table class="tbl"><thead><tr><th>年月</th><th>項目</th><th>繳款日期</th><th>繳款方式</th><th>備註</th><th style="text-align:right">金額</th></tr></thead><tbody id="fixedDetailBody"></tbody></table>
         </div>
       </div>
 
-      <!-- 抓漏 -->
       <div class="section" id="tab-leak">
         <div class="kpi-row" id="leakKpi"></div>
         <div class="card">
@@ -336,53 +405,160 @@ canvas{max-height:220px;}
           <table class="tbl"><thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th>來源</th><th style="text-align:right">金額</th></tr></thead><tbody id="leakBigBody"></tbody></table>
         </div>
         <div class="grid-3">
-          <div class="card">
-            <div class="card-title"><span>📱 訂閱服務累計</span><span class="badge" id="leakSubTotal"></span></div>
-            <table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakSubBody"></tbody></table>
-          </div>
-          <div class="card">
-            <div class="card-title"><span>🛵 外送餐飲累計</span><span class="badge" id="leakDeliveryTotal"></span></div>
-            <table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakDeliveryBody"></tbody></table>
-          </div>
-          <div class="card">
-            <div class="card-title"><span>🚗 停車費累計</span><span class="badge" id="leakParkTotal"></span></div>
-            <table class="tbl"><thead><tr><th>商家</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakParkBody"></tbody></table>
-          </div>
+          <div class="card"><div class="card-title"><span>📱 訂閱服務累計</span><span class="badge" id="leakSubTotal"></span></div><table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakSubBody"></tbody></table></div>
+          <div class="card"><div class="card-title"><span>🛵 外送餐飲累計</span><span class="badge" id="leakDeliveryTotal"></span></div><table class="tbl"><thead><tr><th>商家/服務</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakDeliveryBody"></tbody></table></div>
+          <div class="card"><div class="card-title"><span>🚗 停車費累計</span><span class="badge" id="leakParkTotal"></span></div><table class="tbl"><thead><tr><th>商家</th><th>筆數</th><th style="text-align:right">累計金額</th></tr></thead><tbody id="leakParkBody"></tbody></table></div>
         </div>
       </div>
 
-      <!-- 固定支出總表 -->
-      <div class="section" id="tab-fixed-summary">
-        <div id="fixedNoData" style="display:none;padding:40px;text-align:center;color:var(--muted);">尚無資料。請先在 Google Sheets「固定支出」工作表填入資料，並將 CSV URL 設定到 index.html 的 FIXED_EXPENSE_CSV_URL 常數。</div>
-        <div class="kpi-row" id="fixedSumKpi"></div>
-        <div class="grid-7-5">
-          <div class="card"><div class="card-title"><span>每月固定支出</span></div><canvas id="fixedMonthChart"></canvas></div>
-          <div class="card"><div class="card-title"><span>項目佔比</span></div><canvas id="fixedDonutChart"></canvas></div>
-        </div>
+      <!-- SOP -->
+      <div class="section" id="tab-sop">
         <div class="card">
-          <div class="card-title"><span>各項目年度彙整</span></div>
-          <div id="fixedSumTable"></div>
-        </div>
-      </div>
-
-      <!-- 固定支出明細 -->
-      <div class="section" id="tab-fixed-detail">
-        <div class="card">
-          <div class="card-title"><span>固定支出明細</span><span class="badge" id="fixedDetailCount"></span></div>
-          <div class="filter-row">
-            <select class="sel" id="fixedDetailYear" onchange="renderFixedDetail()"><option value="">全部年份</option></select>
-            <select class="sel" id="fixedDetailItem" onchange="renderFixedDetail()"><option value="">全部項目</option></select>
+          <div class="card-title" style="font-size:15px;">📋 Part 1 — 資料更新 SOP</div>
+          <div style="line-height:2;font-size:13px;">
+            <p style="font-weight:500;margin-bottom:8px;color:var(--accent)">每月固定流程（帳單結帳後執行）</p>
+            <table class="tbl">
+              <thead><tr><th>#</th><th>步驟</th><th>操作</th><th>頻率</th><th>自動/手動</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>下載台新信用卡帳單</td><td>台新網銀 → 信用卡 → 帳單明細 → 下載 CSV → 放入 Drive「02 台新信用卡消費明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>2</td><td>下載遠東信用卡帳單</td><td>遠東網銀 → 帳單查詢 → 下載 CSV → 放入 Drive「03 遠東信用卡消費明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>3</td><td>下載富邦信用卡帳單</td><td>富邦網銀 → 帳單明細 → 下載 CSV → 放入 Drive「04 富邦信用卡消費明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>4</td><td>下載台新繳款明細</td><td>台新帳戶交易明細 CSV → 放入 Drive「05 台新繳款明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>5</td><td>下載遠東繳款明細</td><td>遠東帳戶交易明細 CSV → 放入 Drive「06 遠東繳款明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>6</td><td>下載富邦帳戶明細</td><td>富邦帳戶交易明細 CSV → 放入 Drive「07 富邦繳款明細」</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>7</td><td>更新信用卡負債數字</td><td>修改 index.html 的 TAISHIN_DEBT / FAREAST_DEBT / FUBON_DEBT（bill、paid、dueDate）→ 上傳 GitHub</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>8</td><td>填入固定支出</td><td>Google Sheets「固定支出」工作表填入當月水電瓦斯房租手機</td><td>每月</td><td style="color:var(--warn)">手動</td></tr>
+                <tr><td>9</td><td>發票載具自動更新</td><td>Apps Script 每月5日凌晨自動執行，無需手動</td><td>每月5日</td><td style="color:var(--green)">自動</td></tr>
+                <tr><td>10</td><td>點擊更新資料</td><td>儀表板右上角「🔄 更新資料」→ 確認資料正確</td><td>每月</td><td style="color:var(--warn)">手動觸發</td></tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title" style="font-size:15px;">🔍 Part 2 — 分析：自動化 vs 手工</div>
+          <div class="grid-2">
+            <div>
+              <p style="font-weight:500;color:var(--green);margin-bottom:10px;">✅ 目前已自動化</p>
+              <ul style="font-size:13px;line-height:2;list-style:none;padding:0;">
+                <li>• 發票載具資料每月5日自動讀取更新</li>
+                <li>• 固定支出 Sheets 發布後自動讀取（無需 CSV 上傳）</li>
+                <li>• 分類邏輯自動運算（關鍵字比對）</li>
+                <li>• 月均、KPI、圖表自動產生</li>
+                <li>• 負債利息自動計算</li>
+                <li>• 大額消費、訂閱/外送/停車累計自動抓出</li>
+              </ul>
+            </div>
+            <div>
+              <p style="font-weight:500;color:var(--warn);margin-bottom:10px;">⚠️ 目前仍需手工</p>
+              <ul style="font-size:13px;line-height:2;list-style:none;padding:0;">
+                <li>• 每月下載三張信用卡帳單 CSV 並上傳 Drive</li>
+                <li>• 每月下載三個帳戶繳款明細 CSV 並上傳 Drive</li>
+                <li>• 每月手動修改 index.html 的負債數字</li>
+                <li>• 每月填入 Sheets 固定支出明細</li>
+                <li>• 未來加入收入欄位（尚未建立）</li>
+                <li>• 富邦只有一個月帳單，需補齊歷史資料</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title" style="font-size:15px;">🚀 Part 3 — 建議：可自動化的方向</div>
           <table class="tbl">
-            <thead><tr><th>年月</th><th>項目</th><th>繳款日期</th><th>繳款方式</th><th>備註</th><th style="text-align:right">金額</th></tr></thead>
-            <tbody id="fixedDetailBody"></tbody>
+            <thead><tr><th>#</th><th>項目</th><th>建議方式</th><th>難度</th><th>效益</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>信用卡負債數字自動更新</td><td>將 bill/paid/dueDate 改為從 Google Sheets 讀取，每月在 Sheets 填一次即可，不需改 code 再上傳 GitHub</td><td style="color:var(--green)">低</td><td style="color:var(--green)">高</td></tr>
+              <tr><td>2</td><td>信用卡帳單自動抓取</td><td>理論上可用銀行 API，但台灣三大銀行均無開放 API；目前最快方式仍是手動下載 CSV</td><td style="color:var(--warn)">高</td><td style="color:var(--accent)">中</td></tr>
+              <tr><td>3</td><td>繳款明細自動偵測</td><td>富邦帳戶已包含台新/遠東/富邦繳款記錄，可考慮只維護富邦帳戶 CSV，讓系統自動從單一來源判斷所有繳款</td><td style="color:var(--green)">低</td><td style="color:var(--green)">高</td></tr>
+              <tr><td>4</td><td>固定支出自動抓取</td><td>水電瓦斯可從富邦帳戶 CSV 用關鍵字（台灣電力、自來水、瓦斯費）自動抓取，不需手填 Sheets</td><td style="color:var(--green)">低</td><td style="color:var(--green)">高</td></tr>
+              <tr><td>5</td><td>收入自動記錄</td><td>富邦帳戶 CSV 有薪資轉帳記錄（台灣民眾黨），可自動抓出作為月收入</td><td style="color:var(--green)">低</td><td style="color:var(--green)">高</td></tr>
+              <tr><td>6</td><td>GitHub 自動部署</td><td>設定 GitHub Actions，每當 Drive 有新 CSV 就自動觸發更新（需 GCP + GitHub token 設定）</td><td style="color:var(--warn)">高</td><td style="color:var(--accent)">中</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
 
-      <div class="section" id="tab-insights"><div class="insight-grid" id="insightGrid"></div></div>
-    </div>
-  </div>
+      <!-- 待辦事項 -->
+      <div class="section" id="tab-todo">
+        <div class="card">
+          <div class="card-title" style="font-size:15px;">📝 待辦事項</div>
+          <table class="tbl">
+            <thead><tr><th>#</th><th>項目</th><th>說明</th><th>狀態</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>待增加收入欄位</td><td>邏輯和固定支出一樣，在 Sheets 手動填入月收入，儀表板讀取後顯示收入 vs 支出對比、儲蓄率</td><td><span style="background:#fef3c7;color:#d97706;font-size:10px;padding:1px 8px;border-radius:3px;">待開發</span></td></tr>
+              <tr><td>2</td><td>信用卡負債數字改從 Sheets 讀取</td><td>目前每月要手改 index.html，改為 Sheets 填一次自動同步</td><td><span style="background:#fef3c7;color:#d97706;font-size:10px;padding:1px 8px;border-radius:3px;">待開發</span></td></tr>
+              <tr><td>3</td><td>從富邦帳戶 CSV 自動抓固定支出</td><td>水電瓦斯繳費記錄已在富邦 CSV 裡，用關鍵字自動識別</td><td><span style="background:#fef3c7;color:#d97706;font-size:10px;padding:1px 8px;border-radius:3px;">待開發</span></td></tr>
+              <tr><td>4</td><td>補齊富邦歷史帳單</td><td>目前只有 2026/03 一個月，需補 202510 以來的資料</td><td><span style="background:#fef3c7;color:#d97706;font-size:10px;padding:1px 8px;border-radius:3px;">待補資料</span></td></tr>
+              <tr><td>5</td><td>消費明細搜尋結果加總</td><td>發票總覽、台新/遠東/富邦各自的搜尋也要加篩選後金額加總</td><td><span style="background:#fef3c7;color:#d97706;font-size:10px;padding:1px 8px;border-radius:3px;">待開發</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- 開發進度 -->
+      <div class="section" id="tab-devlog">
+        <div class="card">
+          <div class="card-title" style="font-size:15px;">🗓️ 2026/04/05（Day 1）— 基礎建設</div>
+          <table class="tbl">
+            <thead><tr><th>項目</th><th>內容</th></tr></thead>
+            <tbody>
+              <tr><td>Google Drive 架構</td><td>建立 01 發票資料 / 02 台新信用卡 / 03 遠東信用卡 / 04 富邦信用卡 / 05 台新繳款明細 / 06 遠東繳款明細 / 07 富邦繳款明細 七個資料夾</td></tr>
+              <tr><td>Apps Script v4</td><td>初版，讀取發票載具 CSV、台新信用卡 CSV，寫入 Sheets「發票明細」「台新信用卡」「每月摘要」「分類統計」</td></tr>
+              <tr><td>Apps Script v5~v7</td><td>逐步加入台新繳款、遠東繳款、富邦繳款解析；建立固定支出工作表（欄位：年月、項目、金額、繳款日期、繳款方式、備註）；設定每月5日凌晨自動執行</td></tr>
+              <tr><td>GitHub Pages 部署</td><td>建立 repo teenpray0208/finance-dashboard，設定 Google OAuth（Client ID: 300122945168-...），授權帳號 teen.pray@gmail.com</td></tr>
+              <tr><td>基礎儀表板</td><td>發票總覽、跨年比較、台新信用卡、商家追蹤、消費明細、洞察六個分頁</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title" style="font-size:15px;">🗓️ 2026/04/06 上午（Day 2）— 三卡整合</div>
+          <table class="tbl">
+            <thead><tr><th>項目</th><th>內容</th></tr></thead>
+            <tbody>
+              <tr><td>財務總表</td><td>首頁改為財務總表，加入今年總支出 KPI（含各來源分類小格）、三卡累計已繳 KPI、信用卡負債狀況卡（含台新/遠東/富邦三卡）</td></tr>
+              <tr><td>繳款記錄分頁</td><td>新增台新繳款、遠東繳款、富邦繳款三個獨立分頁，各含負債狀況卡與明細表</td></tr>
+              <tr><td>三卡消費明細</td><td>新增合併分頁，可依年份/分類/卡別篩選，搜尋後顯示金額加總，卡別標籤色碼區分</td></tr>
+              <tr><td>三卡繳款</td><td>新增總覽分頁，KPI 顯示三卡累計，三欄並排各家明細，最下方三卡總明細依日期排序</td></tr>
+              <tr><td>遠東消費明細解析</td><td>修正 parseFarEastCardCsv：移除 inTx 依賴，改用日期格式（MM/DD）直接識別消費行，修正多行 cell 表頭問題</td></tr>
+              <tr><td>富邦消費明細解析</td><td>修正 parseFubonCardCsv：移除 inTx 依賴，改用民國年日期格式（YYY/MM/DD）直接識別，金額取最後非零欄</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title" style="font-size:15px;">🗓️ 2026/04/06 下午（Day 3）— 功能擴充</div>
+          <table class="tbl">
+            <thead><tr><th>項目</th><th>內容</th></tr></thead>
+            <tbody>
+              <tr><td>資料夾改名</td><td>02/03/04 資料夾加上「消費明細」後綴，code 同步更新常數</td></tr>
+              <tr><td>固定支出串接</td><td>Google Sheets 固定支出工作表發布為 CSV，儀表板透過 FIXED_EXPENSE_CSV_URL 直接讀取，不需 Drive 上傳</td></tr>
+              <tr><td>固定支出總表</td><td>新增分頁：月走勢圖、項目圓餅圖、各項目年度彙整表</td></tr>
+              <tr><td>固定支出明細</td><td>新增分頁：逐筆明細，可篩年份/項目</td></tr>
+              <tr><td>抓漏分頁</td><td>單筆 ≥$1,000 清單（含篩選）、訂閱服務累計、外送餐飲累計、停車費累計</td></tr>
+              <tr><td>財務總表更新</td><td>今年總支出加入固定支出來源，小格子新增「固定支出」</td></tr>
+              <tr><td>商家追蹤排序</td><td>加入排序選項：依金額、依筆數、依月數、依名稱</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title" style="font-size:15px;">🗓️ 2026/04/06 傍晚（Day 4）— UI 優化 + 架構重整</div>
+          <table class="tbl">
+            <thead><tr><th>項目</th><th>內容</th></tr></thead>
+            <tbody>
+              <tr><td>分頁列置頂</td><td>改為 position: sticky，滑動時分頁列固定在 header 下方不動</td></tr>
+              <tr><td>信用卡負債表格化</td><td>三卡從獨立卡片改為緊湊表格，4 行看完所有數字（銀行、本期帳單、已繳、尚餘、月息、截止日、累計已繳），最後一行三卡合計</td></tr>
+              <tr><td>三卡繳款優化</td><td>累計金額移到各區塊最上方；最下方新增三卡繳費總明細（合併排序，含銀行標籤）</td></tr>
+              <tr><td>左側直式導航</td><td>取代上方水平分頁，20個分頁按邏輯分五群組（總覽、消費記錄、繳款記錄、固定支出、工具），各分頁加編號</td></tr>
+              <tr><td>SOP 分頁（19）</td><td>Part 1 資料更新流程表（10步）、Part 2 自動化 vs 手工分析、Part 3 可自動化建議表（6項）</td></tr>
+              <tr><td>目標分頁（03）</td><td>百萬/千萬/億萬里程碑、億萬富翁銘言六句、針對現況四層建議、六點值得讚許</td></tr>
+              <tr><td>待辦事項分頁（20）</td><td>記錄五項待開發功能</td></tr>
+              <tr><td>開發進度分頁（21）</td><td>此頁面</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      </div><!-- end dashboard -->
+    </div><!-- end main-content -->
+  </div><!-- end app-body -->
 </div>
 
 <script>
@@ -590,7 +766,7 @@ function renderAll(){
   renderTaishin();renderFarEast();renderFubon();renderAllCards();
   renderPayAll();renderPayTaishin();renderPayFarEast();renderPayFubon();
   renderMerchant();renderDetail();renderLeak();
-  renderFixedSummary();renderFixedDetail();renderInsights();
+  renderFixedSummary();renderFixedDetail();renderInsights();renderGoals();
 }
 
 // ── Home ──────────────────────────────────────────────
@@ -1003,7 +1179,86 @@ function renderInsights(){
   document.getElementById('insightGrid').innerHTML=insights.map(ins=>`<div class="insight-card"><div class="insight-icon">${ins.icon}</div><div class="insight-title">${ins.title}</div><div class="insight-desc">${ins.desc}</div></div>`).join('');
 }
 
-function showTab(id,btn){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');}
+function renderGoals(){
+  const taishinRem=Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid);
+  const fareastRem=Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid);
+  const fubonRem=Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid);
+  const totalDebt=taishinRem+fareastRem+fubonRem;
+  const totalInterest=Math.round((taishinRem*TAISHIN_DEBT.rate+fareastRem*FAREAST_DEBT.rate+fubonRem*FUBON_DEBT.rate)/100/12);
+  const taishinPaid=taishinPayData.reduce((s,r)=>s+r.amount,0);
+  const fareastPaid=fareastPayData.reduce((s,r)=>s+r.amount,0);
+  const fubonPaid=fubonPayData.reduce((s,r)=>s+r.amount,0);
+  const totalPaid=taishinPaid+fareastPaid+fubonPaid;
+
+  // 里程碑
+  document.getElementById('goalsMilestone').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${[
+        {label:'百萬富翁',target:1000000,color:'#16a34a',desc:'淨資產達 $1,000,000。先消滅三卡負債 $'+totalDebt.toLocaleString()+'，每月利息 $'+totalInterest.toLocaleString()+' 正在吃掉你的資本。'},
+        {label:'千萬富翁',target:10000000,color:'#2563eb',desc:'淨資產達 $10,000,000。消滅負債後每月儲蓄投入 ETF，複利時間是最大武器。'},
+        {label:'億萬富翁',target:100000000,color:'#7c3aed',desc:'淨資產達 $100,000,000。需要建立多元收入來源，單一薪資難以到達。'},
+      ].map(m=>`<div style="background:var(--surface2);border-radius:8px;padding:12px 14px;border-left:3px solid ${m.color}">
+        <div style="font-weight:500;font-size:13px;color:${m.color};margin-bottom:4px;">🎯 ${m.label}（$${m.target.toLocaleString()}）</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6">${m.desc}</div>
+      </div>`).join('')}
+    </div>`;
+
+  // 銘言
+  const quotes=[
+    {who:'Warren Buffett',quote:'不要把所有雞蛋放在同一個籃子裡，但也不要籃子太多以致於無法照顧好每一個。'},
+    {who:'Charlie Munger',quote:'反過來想，永遠要反過來想。先搞清楚什麼會讓你失敗，然後避免它。'},
+    {who:'Robert Kiyosaki',quote:'窮人和中產階級為金錢工作；富人讓金錢為他們工作。'},
+    {who:'Benjamin Franklin',quote:'注意小支出，小漏洞也能讓大船沉沒。'},
+    {who:'Morgan Housel',quote:'財富是你沒有花掉的錢。不炫耀才是真正的財富。'},
+    {who:'Ray Dalio',quote:'債務不是壞事，但高利率的消費性債務是毒藥。'},
+  ];
+  document.getElementById('goalsQuotes').innerHTML=`<div style="display:flex;flex-direction:column;gap:10px;">${quotes.map(q=>`
+    <div style="background:var(--surface2);border-radius:8px;padding:12px 14px;">
+      <div style="font-size:12px;color:var(--text);line-height:1.7;font-style:italic">「${q.quote}」</div>
+      <div style="font-size:11px;color:var(--accent);margin-top:4px;font-weight:500">— ${q.who}</div>
+    </div>`).join('')}</div>`;
+
+  // 建議
+  document.getElementById('goalsAdvice').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.8">
+      <div style="background:#fef2f2;border-radius:8px;padding:12px 14px;border-left:3px solid var(--warn)">
+        <strong>🔴 最緊急：消滅三卡循環利息</strong><br>
+        三卡未還總額 $${totalDebt.toLocaleString()}，每月白白燒掉利息約 $${totalInterest.toLocaleString()}。這筆錢如果拿去投資，年報酬 7% 就是每年多 $${Math.round(totalInterest*12*0.07).toLocaleString()}。建議優先還清利率最高的帳款，不要只繳最低應繳金額。
+      </div>
+      <div style="background:#fff7ed;border-radius:8px;padding:12px 14px;border-left:3px solid var(--orange)">
+        <strong>🟠 中期：建立緊急預備金</strong><br>
+        還清負債後，先存 3～6 個月生活費作為緊急備用金，才能避免下次緊急狀況又刷卡循環。
+      </div>
+      <div style="background:#f0fdf4;border-radius:8px;padding:12px 14px;border-left:3px solid var(--green)">
+        <strong>🟢 長期：建立被動收入</strong><br>
+        薪資以外考慮增加收入來源（副業、語言證照接案），並將儲蓄定期投入低費用指數型 ETF（如 0050、VOO）讓複利運作。
+      </div>
+      <div style="background:#eff6ff;border-radius:8px;padding:12px 14px;border-left:3px solid var(--accent)">
+        <strong>🔵 日常：每月縮減漏水支出</strong><br>
+        定期清查訂閱服務是否都有在用、減少外送次數改自煮、停車盡量找免費或低價停車場。這些小支出每月累積金額相當可觀。
+      </div>
+    </div>`;
+
+  // 讚許
+  document.getElementById('goalsPraise').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;">
+      ${[
+        '✅ 願意面對財務現況，不逃避三張信用卡的負債問題，這是改變的第一步。',
+        '✅ 已建立完整的財務儀表板，能即時看到每筆消費去向，大多數人連這一步都沒做到。',
+        '✅ 已累計繳款 $'+totalPaid.toLocaleString()+'，代表你有持續在還款，沒有放棄。',
+        '✅ 使用發票載具記錄消費，資料透明度高，是理財意識的具體展現。',
+        '✅ 主動學習 AI 工具和自動化，這項能力將是未來增加收入的重要資產。',
+        '✅ 利用連假四天建立整套財務追蹤系統，執行力強，不只想不做。',
+      ].map(p=>`<div style="background:var(--surface2);border-radius:7px;padding:9px 13px;line-height:1.6">${p}</div>`).join('')}
+    </div>`;
+}
+
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
 function destroyChart(key){if(charts[key]){charts[key].destroy();delete charts[key];}}
 window.onload=()=>{const script=document.createElement('script');script.src='https://accounts.google.com/gsi/client';script.onload=initGSI;document.head.appendChild(script);};
 </script>
