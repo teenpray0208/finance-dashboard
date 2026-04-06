@@ -29,7 +29,8 @@ header{background:#fff;border-bottom:1px solid var(--border);padding:14px 24px;d
 .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .main{padding:20px;max-width:1400px;margin:0 auto;}
-.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:10px;width:fit-content;flex-wrap:wrap;}
+.tabs{display:flex;gap:4px;margin-bottom:0;background:var(--surface2);padding:4px;border-radius:10px;width:100%;flex-wrap:wrap;position:sticky;top:57px;z-index:99;box-shadow:0 2px 4px rgba(0,0,0,.06);}
+.tabs-wrap{position:sticky;top:57px;z-index:99;background:var(--bg);padding:12px 20px 8px;margin:0 -20px;}
 .tab{background:none;border:none;padding:7px 16px;border-radius:7px;font-family:'Noto Sans TC',sans-serif;font-size:12px;cursor:pointer;color:var(--muted);transition:all .2s;white-space:nowrap;}
 .tab.active{background:#fff;color:var(--accent);font-weight:500;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 .section{display:none;}.section.active{display:block;}
@@ -135,6 +136,7 @@ canvas{max-height:220px;}
   <div class="main">
     <div id="loading" style="display:none"><div class="spinner"></div><p>正在讀取資料...</p></div>
     <div id="dashboard" style="display:none">
+      <div class="tabs-wrap">
       <div class="tabs">
         <button class="tab active" onclick="showTab('home',this)">🏠 財務總表</button>
         <button class="tab" onclick="showTab('overview',this)">📊 發票總覽</button>
@@ -154,6 +156,8 @@ canvas{max-height:220px;}
         <button class="tab" onclick="showTab('fixed-detail',this)">📋 固定支出明細</button>
         <button class="tab" onclick="showTab('insights',this)">💡 洞察</button>
       </div>
+      </div>
+      <div style="height:12px"></div>
 
       <div class="section active" id="tab-home">
         <div class="kpi-row" id="homeKpi"></div>
