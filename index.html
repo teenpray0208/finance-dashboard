@@ -621,40 +621,49 @@ function renderHome(){
   const debtHTML=(bank,debt,paid)=>{
     const rem=Math.max(0,debt.bill-debt.paid);
     const interest=Math.round(rem*debt.rate/100/12);
-    const item=(label,val,cls='')=>`<div class="debt-item"><div class="debt-item-label">${label}</div><div class="debt-item-val ${cls}">${val}</div></div>`;
-    return`<div class="debt-card ${rem===0?'ok':''}">
-      <div class="debt-header"><span class="debt-bank">${bank}信用卡</span><span class="debt-badge" style="background:${rem>0?'#fef2f2':'#f0fdf4'};color:${rem>0?'#ef4444':'#16a34a'}">${rem>0?'有未繳餘額':'已繳清'}</span></div>
-      <div class="debt-grid" style="grid-template-columns:repeat(auto-fit,minmax(90px,1fr));">
-        ${item('本期帳單','$'+debt.bill.toLocaleString(),'red')}
-        ${item('本期已繳','$'+debt.paid.toLocaleString(),'green')}
-        ${item('繳款日期',debt.payDate||'—',debt.payDate?'green':'')}
-        ${item('尚餘應繳','$'+rem.toLocaleString(),rem>0?'red':'green')}
-        ${item('月息估算','$'+interest.toLocaleString(),'orange')}
-        ${item('繳款截止',debt.dueDate,rem>0?'red':'green')}
-        ${item('累計已繳','$'+Math.round(paid).toLocaleString(),'green')}
-      </div></div>`;
+    const c=(val,cls)=>`<td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;white-space:nowrap;${cls==='red'?'color:var(--warn)':cls==='green'?'color:var(--green)':cls==='orange'?'color:var(--orange)':''}">${val}</td>`;
+    return`<tr style="border-bottom:1px solid var(--border);">
+      <td style="padding:7px 10px;white-space:nowrap;">
+        <span style="font-size:12px;font-weight:500;border-left:3px solid ${rem>0?'var(--warn)':'var(--green)'};padding-left:7px;">${bank}</span>
+        <span style="font-size:10px;margin-left:6px;padding:1px 6px;border-radius:3px;background:${rem>0?'#fef2f2':'#f0fdf4'};color:${rem>0?'#ef4444':'#16a34a'}">${rem>0?'未還':'已清'}</span>
+      </td>
+      ${c('$'+debt.bill.toLocaleString(),'red')}
+      ${c('$'+debt.paid.toLocaleString(),'green')}
+      ${c('$'+rem.toLocaleString(),rem>0?'red':'green')}
+      ${c('$'+interest.toLocaleString(),'orange')}
+      ${c(debt.dueDate,rem>0?'red':'')}
+      ${c('$'+Math.round(paid).toLocaleString(),'green')}
+    </tr>`;
   };
   const tBill=TAISHIN_DEBT.bill+FAREAST_DEBT.bill+FUBON_DEBT.bill;
   const tPaid=TAISHIN_DEBT.paid+FAREAST_DEBT.paid+FUBON_DEBT.paid;
   const tRem=Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid)+Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid)+Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid);
   const tInterest=Math.round(Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid)*TAISHIN_DEBT.rate/100/12+Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid)*FAREAST_DEBT.rate/100/12+Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid)*FUBON_DEBT.rate/100/12);
   const tCumPaid=taishinPaid+fareastPaid+fubonPaid;
-  const totalRow=`<div class="debt-card" style="border-left-color:var(--accent);">
-    <div class="debt-header"><span class="debt-bank" style="color:var(--accent)">三卡合計</span></div>
-    <div class="debt-grid" style="grid-template-columns:repeat(auto-fit,minmax(90px,1fr));">
-      <div class="debt-item"><div class="debt-item-label">本期帳單合計</div><div class="debt-item-val red">$${tBill.toLocaleString()}</div></div>
-      <div class="debt-item"><div class="debt-item-label">本期已繳合計</div><div class="debt-item-val green">$${tPaid.toLocaleString()}</div></div>
-      <div class="debt-item"><div class="debt-item-label">繳款日期</div><div class="debt-item-val">—</div></div>
-      <div class="debt-item"><div class="debt-item-label">尚餘應繳合計</div><div class="debt-item-val red">$${tRem.toLocaleString()}</div></div>
-      <div class="debt-item"><div class="debt-item-label">月息合計</div><div class="debt-item-val orange">$${tInterest.toLocaleString()}</div></div>
-      <div class="debt-item"><div class="debt-item-label">繳款截止</div><div class="debt-item-val">—</div></div>
-      <div class="debt-item"><div class="debt-item-label">累計已繳合計</div><div class="debt-item-val green">$${Math.round(tCumPaid).toLocaleString()}</div></div>
-    </div></div>`;
-  document.getElementById('debtCards').innerHTML=
-    debtHTML('台新',TAISHIN_DEBT,taishinPaid)+
-    debtHTML('遠東',FAREAST_DEBT,fareastPaid)+
-    debtHTML('富邦',FUBON_DEBT,fubonPaid)+
-    totalRow;
+  const th=(label)=>`<th style="text-align:right;font-size:10px;color:var(--muted);font-weight:400;padding:6px 10px;white-space:nowrap;letter-spacing:.5px">${label}</th>`;
+  const totalRow=`<tr style="background:var(--surface2);">
+    <td style="padding:7px 10px;font-size:12px;font-weight:500;border-left:3px solid var(--accent);padding-left:10px;color:var(--accent)">三卡合計</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--warn)">$${tBill.toLocaleString()}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--green)">$${tPaid.toLocaleString()}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--warn)">$${tRem.toLocaleString()}</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--orange)">$${tInterest.toLocaleString()}</td>
+    <td style="padding:7px 10px;text-align:right;font-size:11px;color:var(--muted)">—</td>
+    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--green)">$${Math.round(tCumPaid).toLocaleString()}</td>
+  </tr>`;
+  document.getElementById('debtCards').innerHTML=`<div class="card" style="padding:0;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr style="background:var(--surface2);">
+        <th style="text-align:left;font-size:10px;color:var(--muted);font-weight:400;padding:6px 10px;">銀行</th>
+        ${th('本期帳單')}${th('本期已繳')}${th('尚餘應繳')}${th('月息估算')}${th('繳款截止')}${th('累計已繳')}
+      </tr></thead>
+      <tbody>
+        ${debtHTML('台新',TAISHIN_DEBT,taishinPaid)}
+        ${debtHTML('遠東',FAREAST_DEBT,fareastPaid)}
+        ${debtHTML('富邦',FUBON_DEBT,fubonPaid)}
+        ${totalRow}
+      </tbody>
+    </table>
+  </div>`;
 }
 
 // ── 信用卡分頁共用 ────────────────────────────────────
