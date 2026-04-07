@@ -148,35 +148,35 @@ canvas{max-height:220px;}
       <div class="nav-group">
         <div class="nav-group-label">總覽</div>
         <button class="nav-item active" onclick="showTab('home',this)" data-id="home">01 財務總表</button>
-        <button class="nav-item" onclick="showTab('insights',this)" data-id="insights">02 洞察</button>
-        <button class="nav-item" onclick="showTab('goals',this)" data-id="goals">03 目標</button>
+        <button class="nav-item" onclick="showTab('goals',this)" data-id="goals">02 目標</button>
+        <button class="nav-item" onclick="showTab('leak',this)" data-id="leak">03 抓漏</button>
+        <button class="nav-item" onclick="showTab('insights',this)" data-id="insights">04 洞察</button>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">消費記錄</div>
-        <button class="nav-item" onclick="showTab('overview',this)" data-id="overview">04 發票總覽</button>
-        <button class="nav-item" onclick="showTab('compare',this)" data-id="compare">05 跨年比較</button>
-        <button class="nav-item" onclick="showTab('allcards',this)" data-id="allcards">06 三卡消費明細</button>
-        <button class="nav-item" onclick="showTab('taishin',this)" data-id="taishin">07 台新信用卡</button>
-        <button class="nav-item" onclick="showTab('fareast',this)" data-id="fareast">08 遠東信用卡</button>
-        <button class="nav-item" onclick="showTab('fubon',this)" data-id="fubon">09 富邦信用卡</button>
-        <button class="nav-item" onclick="showTab('detail',this)" data-id="detail">10 全部消費明細</button>
-        <button class="nav-item" onclick="showTab('merchant',this)" data-id="merchant">11 商家追蹤</button>
+        <button class="nav-item" onclick="showTab('overview',this)" data-id="overview">05 發票總覽</button>
+        <button class="nav-item" onclick="showTab('compare',this)" data-id="compare">06 跨年比較</button>
+        <button class="nav-item" onclick="showTab('allcards',this)" data-id="allcards">07 三卡消費明細</button>
+        <button class="nav-item" onclick="showTab('taishin',this)" data-id="taishin">08 台新信用卡</button>
+        <button class="nav-item" onclick="showTab('fareast',this)" data-id="fareast">09 遠東信用卡</button>
+        <button class="nav-item" onclick="showTab('fubon',this)" data-id="fubon">10 富邦信用卡</button>
+        <button class="nav-item" onclick="showTab('detail',this)" data-id="detail">11 全部消費明細</button>
+        <button class="nav-item" onclick="showTab('merchant',this)" data-id="merchant">12 商家追蹤</button>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">繳款記錄</div>
-        <button class="nav-item" onclick="showTab('pay-all',this)" data-id="pay-all">12 三卡繳款</button>
-        <button class="nav-item" onclick="showTab('pay-taishin',this)" data-id="pay-taishin">13 台新繳款</button>
-        <button class="nav-item" onclick="showTab('pay-fareast',this)" data-id="pay-fareast">14 遠東繳款</button>
-        <button class="nav-item" onclick="showTab('pay-fubon',this)" data-id="pay-fubon">15 富邦繳款</button>
+        <button class="nav-item" onclick="showTab('pay-all',this)" data-id="pay-all">13 三卡繳款</button>
+        <button class="nav-item" onclick="showTab('pay-taishin',this)" data-id="pay-taishin">14 台新繳款</button>
+        <button class="nav-item" onclick="showTab('pay-fareast',this)" data-id="pay-fareast">15 遠東繳款</button>
+        <button class="nav-item" onclick="showTab('pay-fubon',this)" data-id="pay-fubon">16 富邦繳款</button>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">固定支出</div>
-        <button class="nav-item" onclick="showTab('fixed-summary',this)" data-id="fixed-summary">16 固定支出總表</button>
-        <button class="nav-item" onclick="showTab('fixed-detail',this)" data-id="fixed-detail">17 固定支出明細</button>
+        <button class="nav-item" onclick="showTab('fixed-summary',this)" data-id="fixed-summary">17 固定支出總表</button>
+        <button class="nav-item" onclick="showTab('fixed-detail',this)" data-id="fixed-detail">18 固定支出明細</button>
       </div>
       <div class="nav-group">
         <div class="nav-group-label">工具</div>
-        <button class="nav-item" onclick="showTab('leak',this)" data-id="leak">18 抓漏</button>
         <button class="nav-item" onclick="showTab('sop',this)" data-id="sop">19 資料 SOP</button>
         <button class="nav-item" onclick="showTab('todo',this)" data-id="todo">20 待辦事項</button>
         <button class="nav-item" onclick="showTab('devlog',this)" data-id="devlog">21 開發進度</button>
@@ -193,6 +193,30 @@ canvas{max-height:220px;}
         <div class="kpi-row" id="homeKpi"></div>
         <div class="card-title" style="margin-bottom:10px;font-size:14px;font-weight:500;">💳 信用卡負債狀況</div>
         <div id="debtCards"></div>
+        <!-- 年月累計消費 -->
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title"><span>📅 各年各月累計消費金額</span></div>
+          <div id="homeYearMonthTable" style="overflow-x:auto;"></div>
+        </div>
+        <!-- 三卡消費明細 -->
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title"><span>🔀 三卡消費明細</span><span class="badge" id="homeAllcardsCount"></span></div>
+          <div class="filter-row">
+            <select class="sel" id="homeAllcardsYear" onchange="renderHomeAllCards()"><option value="">全部年份</option></select>
+            <select class="sel" id="homeAllcardsCard" onchange="renderHomeAllCards()">
+              <option value="">全部信用卡</option><option value="taishin">台新</option><option value="fareast">遠東</option><option value="fubon">富邦</option>
+            </select>
+          </div>
+          <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="homeAllcardsSearch" placeholder="搜尋消費明細..." oninput="renderHomeAllCards()"></div>
+          <div id="homeAllcardsTotal" style="display:none" class="search-total"><span class="search-total-label">篩選結果合計</span><span class="search-total-val" id="homeAllcardsTotalVal">$0</span></div>
+          <table class="tbl"><thead><tr><th>日期</th><th>消費明細</th><th>分類</th><th>信用卡</th><th style="text-align:right">金額</th></tr></thead><tbody id="homeAllcardsBody"></tbody></table>
+        </div>
+        <!-- 三卡繳款 -->
+        <div class="card" style="margin-top:14px;">
+          <div class="card-title"><span>💰 三卡繳費總明細</span><span class="badge" id="homePayCount"></span></div>
+          <div id="homePayTotal" style="font-family:'Space Mono',monospace;font-weight:700;color:var(--green);font-size:15px;margin-bottom:10px;"></div>
+          <table class="pay-tbl"><thead><tr><th>日期</th><th>銀行</th><th>摘要</th><th style="text-align:right">金額</th></tr></thead><tbody id="homePayBody"></tbody></table>
+        </div>
       </div>
 
       <div class="section" id="tab-insights"><div class="insight-grid" id="insightGrid"></div></div>
@@ -844,6 +868,7 @@ function renderAll(){
   renderPayAll();renderPayTaishin();renderPayFarEast();renderPayFubon();
   renderMerchant();renderDetail();renderLeak();
   renderFixedSummary();renderFixedDetail();renderInsights();renderGoals();
+  // homeAllcardsYear 由 renderHome 內部處理
 }
 
 // ── Home ──────────────────────────────────────────────
@@ -858,6 +883,7 @@ function renderHome(){
   const taishinPaid=taishinPayData.reduce((s,r)=>s+r.amount,0);
   const fareastPaid=fareastPayData.reduce((s,r)=>s+r.amount,0);
   const fubonPaid=fubonPayData.reduce((s,r)=>s+r.amount,0);
+
   document.getElementById('homeKpi').innerHTML=`
     <div class="kpi"><div class="kpi-label">今年總支出</div><div class="kpi-val red">$${Math.round(totalThisYear).toLocaleString()}</div>
       <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
@@ -871,54 +897,166 @@ function renderHome(){
     <div class="kpi"><div class="kpi-label">台新累計已繳</div><div class="kpi-val green">$${Math.round(taishinPaid).toLocaleString()}</div><div class="kpi-sub">未還 $${Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid).toLocaleString()} ／ 截止 ${TAISHIN_DEBT.dueDate}</div></div>
     <div class="kpi"><div class="kpi-label">遠東累計已繳</div><div class="kpi-val blue">$${Math.round(fareastPaid).toLocaleString()}</div><div class="kpi-sub">未還 $${Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid).toLocaleString()} ／ 截止 ${FAREAST_DEBT.dueDate}</div></div>
     <div class="kpi"><div class="kpi-label">富邦累計已繳</div><div class="kpi-val orange">$${Math.round(fubonPaid).toLocaleString()}</div><div class="kpi-sub">未還 $${Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid).toLocaleString()} ／ 截止 ${FUBON_DEBT.dueDate}</div></div>`;
-  const debtHTML=(bank,debt,paid)=>{
+
+  // 計算各卡各年消費
+  const calcYearTotal=(data,year)=>data.filter(r=>r.year===year).reduce((s,r)=>s+r.amount,0);
+  const allCardData=[...taishinData,...fareastCardData,...fubonCardData];
+  const allYears=[...new Set(allCardData.map(r=>r.year))].sort();
+
+  // 預估還清月數（以最低繳款額估算）
+  const estPayoff=(rem,rate,monthlyPay)=>{
+    if(rem<=0)return'已還清';
+    if(monthlyPay<=0)return'—';
+    const monthRate=rate/100/12;
+    if(monthlyPay<=rem*monthRate)return'永遠還不完（月繳不夠利息）';
+    const months=Math.ceil(Math.log(monthlyPay/(monthlyPay-rem*monthRate))/Math.log(1+monthRate));
+    const d=new Date();d.setMonth(d.getMonth()+months);
+    return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}（約${months}個月）`;
+  };
+
+  const MONTHLY_SALARY=39000;
+  const MONTHLY_FIXED=20564;
+  const avail=MONTHLY_SALARY-MONTHLY_FIXED;
+  // 依尚餘比例分配可還款金額
+  const tRem=Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid);
+  const fRem=Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid);
+  const fuRem=Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid);
+  const totalRem=tRem+fRem+fuRem;
+  const tMonthly=totalRem?Math.round(avail*tRem/totalRem):0;
+  const fMonthly=totalRem?Math.round(avail*fRem/totalRem):0;
+  const fuMonthly=totalRem?Math.round(avail*fuRem/totalRem):0;
+
+  const debtHTML=(bank,debt,paid,cardData,monthlyPay)=>{
     const rem=Math.max(0,debt.bill-debt.paid);
     const interest=Math.round(rem*debt.rate/100/12);
-    const c=(val,cls)=>`<td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;white-space:nowrap;${cls==='red'?'color:var(--warn)':cls==='green'?'color:var(--green)':cls==='orange'?'color:var(--orange)':''}">${val}</td>`;
+    const c=(val,cls,align='right')=>`<td style="font-family:'Space Mono',monospace;font-size:11px;font-weight:700;text-align:${align};padding:6px 8px;white-space:nowrap;${cls==='red'?'color:var(--warn)':cls==='green'?'color:var(--green)':cls==='orange'?'color:var(--orange)':cls==='purple'?'color:var(--purple)':''}">${val}</td>`;
+    const t25=Math.round(calcYearTotal(cardData,'2025'));
+    const t26=Math.round(calcYearTotal(cardData,'2026'));
+    // 預估全年（到12月）
+    const curMonth=new Date().getMonth()+1;
+    const est26=curMonth>0?Math.round(t26/curMonth*12):0;
+    const est27=est26; // 以2026年均速估算2027
+    const payoffDate=estPayoff(rem,debt.rate,monthlyPay);
     return`<tr style="border-bottom:1px solid var(--border);">
-      <td style="padding:7px 10px;white-space:nowrap;">
+      <td style="padding:6px 8px;white-space:nowrap;">
         <span style="font-size:12px;font-weight:500;border-left:3px solid ${rem>0?'var(--warn)':'var(--green)'};padding-left:7px;">${bank}</span>
-        <span style="font-size:10px;margin-left:6px;padding:1px 6px;border-radius:3px;background:${rem>0?'#fef2f2':'#f0fdf4'};color:${rem>0?'#ef4444':'#16a34a'}">${rem>0?'未還':'已清'}</span>
+        <span style="font-size:10px;margin-left:4px;padding:1px 5px;border-radius:3px;background:${rem>0?'#fef2f2':'#f0fdf4'};color:${rem>0?'#ef4444':'#16a34a'}">${rem>0?'未還':'已清'}</span>
       </td>
       ${c('$'+debt.bill.toLocaleString(),'red')}
       ${c('$'+debt.paid.toLocaleString(),'green')}
-      <td style="font-size:11px;text-align:right;padding:7px 10px;white-space:nowrap;color:${debt.payDate?'var(--green)':'var(--muted2)'}">${debt.payDate||'—'}</td>
+      <td style="font-size:11px;text-align:right;padding:6px 8px;white-space:nowrap;color:${debt.payDate?'var(--green)':'var(--muted2)'}">${debt.payDate||'—'}</td>
       ${c('$'+rem.toLocaleString(),rem>0?'red':'green')}
+      ${c(debt.rate+'%','orange')}
       ${c('$'+interest.toLocaleString(),'orange')}
-      ${c(debt.dueDate,rem>0?'red':'')}
       ${c('$'+Math.round(paid).toLocaleString(),'green')}
+      ${c(t25?'$'+t25.toLocaleString():'—','')}
+      ${c('$'+t26.toLocaleString(),'')}
+      ${c('$'+est26.toLocaleString(),'purple')}
+      ${c('$'+est27.toLocaleString(),'purple')}
+      <td style="font-size:10px;text-align:right;padding:6px 8px;white-space:nowrap;color:${payoffDate.includes('永遠')?'var(--warn)':'var(--accent)'}">${payoffDate}</td>
     </tr>`;
   };
+
   const tBill=TAISHIN_DEBT.bill+FAREAST_DEBT.bill+FUBON_DEBT.bill;
   const tPaid=TAISHIN_DEBT.paid+FAREAST_DEBT.paid+FUBON_DEBT.paid;
-  const tRem=Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid)+Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid)+Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid);
-  const tInterest=Math.round(Math.max(0,TAISHIN_DEBT.bill-TAISHIN_DEBT.paid)*TAISHIN_DEBT.rate/100/12+Math.max(0,FAREAST_DEBT.bill-FAREAST_DEBT.paid)*FAREAST_DEBT.rate/100/12+Math.max(0,FUBON_DEBT.bill-FUBON_DEBT.paid)*FUBON_DEBT.rate/100/12);
+  const tInterest=Math.round(tRem*TAISHIN_DEBT.rate/100/12+fRem*FAREAST_DEBT.rate/100/12+fuRem*FUBON_DEBT.rate/100/12);
   const tCumPaid=taishinPaid+fareastPaid+fubonPaid;
-  const th=(label)=>`<th style="text-align:right;font-size:10px;color:var(--muted);font-weight:400;padding:6px 10px;white-space:nowrap;letter-spacing:.5px">${label}</th>`;
-  const totalRow=`<tr style="background:var(--surface2);">
-    <td style="padding:7px 10px;font-size:12px;font-weight:500;border-left:3px solid var(--accent);padding-left:10px;color:var(--accent)">三卡合計</td>
-    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--warn)">$${tBill.toLocaleString()}</td>
-    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--green)">$${tPaid.toLocaleString()}</td>
-    <td style="padding:7px 10px;text-align:right;font-size:11px;color:var(--muted)">—</td>
-    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--warn)">$${tRem.toLocaleString()}</td>
-    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--orange)">$${tInterest.toLocaleString()}</td>
-    <td style="padding:7px 10px;text-align:right;font-size:11px;color:var(--muted)">—</td>
-    <td style="font-family:'Space Mono',monospace;font-size:12px;font-weight:700;text-align:right;padding:7px 10px;color:var(--green)">$${Math.round(tCumPaid).toLocaleString()}</td>
-  </tr>`;
-  document.getElementById('debtCards').innerHTML=`<div class="card" style="padding:0;overflow:hidden;">
-    <table style="width:100%;border-collapse:collapse;">
+  const th=(label)=>`<th style="text-align:right;font-size:9px;color:var(--muted);font-weight:400;padding:5px 8px;white-space:nowrap;">${label}</th>`;
+
+  document.getElementById('debtCards').innerHTML=`<div class="card" style="padding:0;overflow:auto;">
+    <table style="width:100%;border-collapse:collapse;min-width:900px;">
       <thead><tr style="background:var(--surface2);">
-        <th style="text-align:left;font-size:10px;color:var(--muted);font-weight:400;padding:6px 10px;">銀行</th>
-        ${th('本期帳單')}${th('本期已繳')}${th('繳納日期')}${th('尚餘應繳')}${th('月息估算')}${th('繳款截止')}${th('累計已繳')}
+        <th style="text-align:left;font-size:9px;color:var(--muted);font-weight:400;padding:5px 8px;">銀行</th>
+        ${th('本期帳單')}${th('本期已繳')}${th('繳納日期')}${th('尚餘應繳')}${th('循環利率')}${th('本月利息')}${th('累計已繳')}${th('2025累積消費')}${th('2026累積消費')}${th('預估2026全年')}${th('預估2027全年')}${th('預計還清日期')}
       </tr></thead>
       <tbody>
-        ${debtHTML('台新',TAISHIN_DEBT,taishinPaid)}
-        ${debtHTML('遠東',FAREAST_DEBT,fareastPaid)}
-        ${debtHTML('富邦',FUBON_DEBT,fubonPaid)}
-        ${totalRow}
+        ${debtHTML('台新',TAISHIN_DEBT,taishinPaid,taishinData,tMonthly)}
+        ${debtHTML('遠東',FAREAST_DEBT,fareastPaid,fareastCardData,fMonthly)}
+        ${debtHTML('富邦',FUBON_DEBT,fubonPaid,fubonCardData,fuMonthly)}
+        <tr style="background:var(--surface2);font-weight:700;">
+          <td style="padding:6px 8px;font-size:12px;color:var(--accent);border-left:3px solid var(--accent);padding-left:10px;">三卡合計</td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;text-align:right;padding:6px 8px;color:var(--warn)">$${tBill.toLocaleString()}</td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;text-align:right;padding:6px 8px;color:var(--green)">$${tPaid.toLocaleString()}</td>
+          <td style="padding:6px 8px;text-align:right;color:var(--muted)">—</td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;text-align:right;padding:6px 8px;color:var(--warn)">$${totalRem.toLocaleString()}</td>
+          <td style="padding:6px 8px;text-align:right;color:var(--muted)">—</td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;text-align:right;padding:6px 8px;color:var(--orange)">$${tInterest.toLocaleString()}</td>
+          <td style="font-family:'Space Mono',monospace;font-size:11px;text-align:right;padding:6px 8px;color:var(--green)">$${Math.round(tCumPaid).toLocaleString()}</td>
+          <td colspan="4" style="padding:6px 8px;text-align:right;color:var(--muted);font-size:10px;">月薪$${MONTHLY_SALARY.toLocaleString()} 扣固支$${MONTHLY_FIXED.toLocaleString()} 可還$${avail.toLocaleString()}</td>
+        </tr>
       </tbody>
     </table>
   </div>`;
+
+  // 年月累計消費表
+  const allConsume=[...invoiceData,...taishinData,...fareastCardData,...fubonCardData];
+  const years=[...new Set(allConsume.map(r=>r.year))].sort();
+  const months=['01','02','03','04','05','06','07','08','09','10','11','12'];
+  const ymTable=`<table style="width:100%;border-collapse:collapse;font-size:11px;">
+    <thead><tr style="background:var(--surface2);">
+      <th style="padding:5px 10px;text-align:left;font-size:9px;color:var(--muted);font-weight:400;">年份</th>
+      ${months.map(m=>`<th style="padding:5px 8px;text-align:right;font-size:9px;color:var(--muted);font-weight:400;">${parseInt(m)}月</th>`).join('')}
+      <th style="padding:5px 8px;text-align:right;font-size:9px;color:var(--muted);font-weight:400;">年合計</th>
+    </tr></thead>
+    <tbody>${years.map(y=>{
+      const row=months.map(m=>{
+        const k=y+'/'+m;const v=Math.round(allConsume.filter(r=>r.yearMonth===k).reduce((s,r)=>s+r.amount,0));
+        return`<td style="text-align:right;padding:5px 8px;font-family:'Space Mono',monospace;color:${v>0?'var(--text)':'var(--muted2)'};">${v>0?'$'+v.toLocaleString():'—'}</td>`;
+      }).join('');
+      const ytotal=Math.round(allConsume.filter(r=>r.year===y).reduce((s,r)=>s+r.amount,0));
+      return`<tr style="border-bottom:1px solid var(--border);"><td style="padding:5px 10px;font-weight:500;color:var(--accent);font-family:'Space Mono',monospace;">${y}</td>${row}<td style="text-align:right;padding:5px 8px;font-family:'Space Mono',monospace;font-weight:700;color:var(--warn)">$${ytotal.toLocaleString()}</td></tr>`;
+    }).join('')}</tbody>
+  </table>`;
+  document.getElementById('homeYearMonthTable').innerHTML=ymTable;
+
+  // 首頁三卡消費年份選單
+  const acYears=[...new Set([...taishinData,...fareastCardData,...fubonCardData].map(r=>r.year))].sort().reverse();
+  document.getElementById('homeAllcardsYear').innerHTML='<option value="">全部年份</option>'+acYears.map(y=>`<option value="${y}">${y}年</option>`).join('');
+
+  renderHomeAllCards();
+  renderHomePayAll();
+}
+
+function renderHomeAllCards(){
+  const year=document.getElementById('homeAllcardsYear').value;
+  const card=document.getElementById('homeAllcardsCard').value;
+  const q=document.getElementById('homeAllcardsSearch').value.toLowerCase();
+  let data=[];
+  if(!card||card==='taishin')data.push(...taishinData.map(r=>({...r,cardName:'台新',cardClass:'taishin'})));
+  if(!card||card==='fareast')data.push(...fareastCardData.map(r=>({...r,cardName:'遠東',cardClass:'fareast'})));
+  if(!card||card==='fubon')data.push(...fubonCardData.map(r=>({...r,cardName:'富邦',cardClass:'fubon'})));
+  if(year)data=data.filter(r=>r.year===year);
+  if(q)data=data.filter(r=>(r.desc||r.display||'').toLowerCase().includes(q));
+  data=data.sort((a,b)=>b.date.localeCompare(a.date));
+  const total=data.reduce((s,r)=>s+r.amount,0);
+  const hasFilter=year||card||q;
+  document.getElementById('homeAllcardsTotal').style.display=hasFilter?'flex':'none';
+  document.getElementById('homeAllcardsTotalVal').textContent='$'+Math.round(total).toLocaleString();
+  document.getElementById('homeAllcardsCount').textContent=data.length+' 筆';
+  document.getElementById('homeAllcardsBody').innerHTML=data.slice(0,300).map(r=>`<tr>
+    <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;white-space:nowrap">${r.date.slice(5)}</td>
+    <td>${r.desc||r.display}</td>
+    <td><span class="tag" style="background:${cc(r.category)}22;color:${cc(r.category)}">${r.category}</span></td>
+    <td><span class="card-tag ${r.cardClass}">${r.cardName}</span></td>
+    <td class="amt out">$${Math.round(r.amount).toLocaleString()}</td>
+  </tr>`).join('');
+}
+
+function renderHomePayAll(){
+  const allPay=[
+    ...taishinPayData.map(r=>({...r,bankName:'台新',bankClass:'taishin'})),
+    ...fareastPayData.map(r=>({...r,bankName:'遠東',bankClass:'fareast'})),
+    ...fubonPayData.map(r=>({...r,bankName:'富邦',bankClass:'fubon'})),
+  ].sort((a,b)=>b.txDate.localeCompare(a.txDate));
+  const total=allPay.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('homePayCount').textContent=allPay.length+' 筆';
+  document.getElementById('homePayTotal').textContent='三卡累計繳款 $'+Math.round(total).toLocaleString();
+  document.getElementById('homePayBody').innerHTML=allPay.map(r=>`<tr>
+    <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:11px">${r.txDate}</td>
+    <td><span class="card-tag ${r.bankClass}">${r.bankName}</span></td>
+    <td style="font-size:12px;color:var(--muted)">${r.summary}</td>
+    <td class="amt">$${Math.round(r.amount).toLocaleString()}</td>
+  </tr>`).join('');
 }
 
 // ── 信用卡分頁共用 ────────────────────────────────────
